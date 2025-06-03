@@ -310,16 +310,38 @@ button:disabled {
   background: rgba(0, 0, 0, 0.3);
   border-radius: 4px;
   display: block;
+  letter-spacing: 2px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#score::after {
+  content: "分";
+  font-size: 18px;
+  margin-left: 4px;
+  display: inline-block;
+  line-height: 1;
 }
 
 #current-model {
   font-family: 'Press Start 2P', cursive;
-  font-size: 20px;
   color: #ffcc00;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
   margin: 10px 0;
   padding: 8px 16px;
   background: rgba(0, 0, 0, 0.3);
   border-radius: 4px;
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  width: 100%;
+  box-sizing: border-box;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: clamp(15px, 3.4vw, 20px);
+  line-height: 1;
 }
