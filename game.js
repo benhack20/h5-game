@@ -7,13 +7,13 @@ let timeLeft = config.gameDuration;
 let gameInterval = null;      // 控制倒计时
 let itemInterval = null;      // 控制item自动切换
 let isShaking = false;        // 控制是否在震动中
+let isGameStarted = false;
 
 const scoreDisplay = document.getElementById('score');
 const furnace = document.getElementById('furnace');
 const furnaceContent = document.getElementById('furnace-content');
 const timerDisplay = document.getElementById('timer');
 const resultDisplay = document.getElementById('result');
-const startButton = document.getElementById('start-button');
 const modelDisplay = document.getElementById('current-model');
 
 function getCurrentModel(score) {
@@ -96,17 +96,20 @@ function showNextItem() {
 }
 
 function startGame() {
+  if (isGameStarted) return;
+  
+  isGameStarted = true;
   score = 0;
   timeLeft = config.gameDuration;
   updateScore(0);
   resultDisplay.textContent = '';
-  startButton.disabled = true;
   furnace.style.pointerEvents = 'auto';
+  furnace.classList.add('active');  // 添加动画类
 
   // 倒计时开始
   gameInterval = setInterval(() => {
     timeLeft--;
-    timerDisplay.textContent = `倒计时：${timeLeft}s`;
+    timerDisplay.textContent = `${timeLeft}s`;
     if (timeLeft <= 0) endGame();
   }, 1000);
 
@@ -120,10 +123,33 @@ function endGame() {
   clearInterval(itemInterval);
   furnaceContent.textContent = '🔥';
   furnace.style.pointerEvents = 'none';
-  startButton.disabled = false;
+  furnace.classList.remove('active');  // 移除动画类
+  isGameStarted = false;
   const model = getCurrentModel(score);
   resultDisplay.innerHTML = `你炼出了 <strong>${model}</strong>！<br/>分数：${score}<br/>想用真算力？快试试启迪之星算力服务！`;
-  timerDisplay.textContent = `倒计时：0s`;
+  timerDisplay.textContent = `0s`;
 }
 
-startButton.onclick = startGame;
+// 初始化点击事件
+furnace.onclick = () => {
+  if (!isGameStarted) {
+    startGame();
+    return;
+  }
+  
+  if (isShaking) return;  // 如果正在震动，不响应点击
+  
+  const currentItem = getRandomItem();
+  if (currentItem.score < 0) {
+    // 点击了负面物品，触发震动
+    shakeFurnace();
+  } else {
+    // 点击了正面物品，正常处理
+    updateScore(currentItem.score);
+    // 清除当前定时器
+    clearInterval(itemInterval);
+    // 设置新的定时器
+    itemInterval = setInterval(showNextItem, config.contentSwitchInterval);
+    showNextItem();  // 点击后马上切换到下一条
+  }
+};

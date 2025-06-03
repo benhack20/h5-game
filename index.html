@@ -4,19 +4,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>模型炼丹场</title>
+  <title>大模型炼丹场</title>
   <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <script type="module">
     import { config } from './config.js';
     document.documentElement.style.setProperty('--furnace-pulse-interval', `${config.furnacePulseInterval}s`);
     // 设置初始倒计时显示
-    document.getElementById('timer').textContent = `倒计时：${config.gameDuration}s`;
+    document.getElementById('timer').textContent = `${config.gameDuration}s`;
   </script>
 </head>
 
 <body>
   <div class="game-container">
-    <h1>🔥 模型炼丹场</h1>
+    <h1>🔥 大模型炼丹场</h1>
     <div id="score">分数：0</div>
     <div id="current-model">当前模型：草稿模型 0.1b</div>
     <div id="furnace">
@@ -28,10 +29,9 @@
       <div class="bubble"></div>
       <div class="bubble"></div>
       <div class="bubble"></div>
-      <div id="furnace-content">🔥</div>
+      <div id="furnace-content">开始炼丹</div>
     </div>
-    <div id="timer">倒计时：30s</div>
-    <button id="start-button">开始炼丹</button>
+    <div id="timer">30s</div>
     <div id="result"></div>
   </div>
   <script type="module" src="game.js"></script>
