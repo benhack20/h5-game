@@ -6,6 +6,7 @@ let score = 0;
 let timeLeft = config.gameDuration;
 let gameInterval = null;      // 控制倒计时
 let itemInterval = null;      // 控制item自动切换
+let isShaking = false;        // 控制是否在震动中
 
 const scoreDisplay = document.getElementById('score');
 const furnace = document.getElementById('furnace');
@@ -44,6 +45,29 @@ function getRandomItem() {
   return pool[Math.floor(Math.random() * pool.length)];
 }
 
+function shakeFurnace() {
+  if (isShaking) return;
+  
+  isShaking = true;
+  furnace.style.animation = 'shake 0.5s ease-in-out';
+  furnace.style.pointerEvents = 'none';  // 禁用点击
+  
+  // 暂停自动切换
+  clearInterval(itemInterval);
+  
+  // 震动结束后恢复
+  setTimeout(() => {
+    furnace.style.animation = 'pulse var(--furnace-pulse-interval) ease-in-out infinite';
+    furnace.style.pointerEvents = 'auto';  // 恢复点击
+    isShaking = false;
+    
+    // 震动结束后继续游戏
+    showNextItem();
+    // 重新开始自动切换
+    itemInterval = setInterval(showNextItem, config.contentSwitchInterval);
+  }, 500);
+}
+
 function showNextItem() {
   const item = getRandomItem();
   // 先移除动画类
@@ -54,12 +78,20 @@ function showNextItem() {
   furnaceContent.classList.add('drop-in');
   furnaceContent.textContent = `${item.emoji} ${item.name}`;
   furnace.onclick = () => {
-    updateScore(item.score);
-    // 清除当前定时器
-    clearInterval(itemInterval);
-    // 设置新的定时器
-    itemInterval = setInterval(showNextItem, config.contentSwitchInterval);
-    showNextItem();  // 点击后马上切换到下一条
+    if (isShaking) return;  // 如果正在震动，不响应点击
+    
+    if (item.score < 0) {
+      // 点击了负面物品，触发震动
+      shakeFurnace();
+    } else {
+      // 点击了正面物品，正常处理
+      updateScore(item.score);
+      // 清除当前定时器
+      clearInterval(itemInterval);
+      // 设置新的定时器
+      itemInterval = setInterval(showNextItem, config.contentSwitchInterval);
+      showNextItem();  // 点击后马上切换到下一条
+    }
   };
 }
 
