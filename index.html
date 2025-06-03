@@ -1,17 +1,141 @@
 <!DOCTYPE html>
 <html lang="zh">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>炼丹小游戏</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>模型炼丹场</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      background-color: #fffbe6;
+      margin: 0;
+      padding: 0;
+    }
+
+    #game {
+      margin-top: 50px;
+    }
+
+    #furnace {
+      width: 200px;
+      height: 200px;
+      margin: 20px auto;
+      background-color: #ffdd57;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      border-radius: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      cursor: pointer;
+    }
+
+    #score,
+    #timer,
+    #live-model {
+      font-size: 24px;
+      margin: 10px;
+    }
+
+    #result {
+      margin-top: 30px;
+      font-size: 20px;
+      display: none;
+    }
+  </style>
 </head>
+
 <body>
-  <h1>炼丹小游戏</h1>
-  <p>点击炼丹炉增加分数，在30秒内看看你能点多少！</p>
-  <div id="score">分数：0</div>
-  <div id="timer">剩余时间：30秒</div>
-  <button id="clickBtn">炼丹！</button>
-  <script src="script.js"></script>
+  <h1>🧪 模型炼丹场</h1>
+  <div id="game">
+    <div id="timer">剩余时间: 30 秒</div>
+    <div id="score">分数: 0</div>
+    <div id="live-model">当前模型: ——</div>
+    <div id="furnace">点击开始</div>
+    <div id="result"></div>
+  </div>
+
+  <script type="module">
+    import { positiveItems, negativeItems } from './items.js';
+    import { modelRanks } from './models.js';
+
+    const furnace = document.getElementById("furnace");
+    const scoreDisplay = document.getElementById("score");
+    const timerDisplay = document.getElementById("timer");
+    const resultDisplay = document.getElementById("result");
+    const liveModelDisplay = document.getElementById("live-model");
+
+    let score = 0;
+    let timeLeft = 30;
+    let gameInterval;
+    let itemTimeout;
+    let currentItem;
+
+    function getRandomItem() {
+      const pool = Math.random() > 0.4 ? positiveItems : negativeItems;
+      return pool[Math.floor(Math.random() * pool.length)];
+    }
+
+    function updateFurnace() {
+      currentItem = getRandomItem();
+      furnace.textContent = currentItem.emoji + ' ' + currentItem.name;
+    }
+
+    function updateLiveModel() {
+      const currentModel = modelRanks.findLast(m => score >= m.min)?.name || "——";
+      liveModelDisplay.textContent = `当前模型: ${currentModel}`;
+    }
+
+    function startGame() {
+      score = 0;
+      timeLeft = 30;
+      scoreDisplay.textContent = `分数: ${score}`;
+      timerDisplay.textContent = `剩余时间: ${timeLeft} 秒`;
+      resultDisplay.style.display = "none";
+      furnace.textContent = "准备...";
+      liveModelDisplay.textContent = "当前模型: ——";
+
+      gameInterval = setInterval(() => {
+        timeLeft--;
+        timerDisplay.textContent = `剩余时间: ${timeLeft} 秒`;
+        if (timeLeft <= 0) endGame();
+      }, 1000);
+
+      nextItem();
+    }
+
+    function nextItem() {
+      updateFurnace();
+      itemTimeout = setTimeout(nextItem, 1000 + Math.random() * 800);
+    }
+
+    function endGame() {
+      clearInterval(gameInterval);
+      clearTimeout(itemTimeout);
+      furnace.textContent = "炼丹结束";
+      furnace.style.pointerEvents = "none";
+
+      let finalModel = modelRanks.findLast(m => score >= m.min).name;
+      resultDisplay.innerHTML = `🎉 你炼出了 <b>${finalModel}</b>！<br>总分：${score} 分<br><br>⚡️ <b>启迪之星</b>提供RTX 5090/H100等真·算力！<br>扫码登录平台，助你炼出真正的大模型！`;
+      resultDisplay.style.display = "block";
+    }
+
+    furnace.addEventListener("click", () => {
+      if (timeLeft === 30 && !gameInterval) {
+        furnace.style.pointerEvents = "auto";
+        startGame();
+        return;
+      }
+
+      if (!currentItem) return;
+      score += currentItem.score;
+      scoreDisplay.textContent = `分数: ${score}`;
+      updateLiveModel();
+      updateFurnace();
+    });
+  </script>
 </body>
+
 </html>

@@ -1,0 +1,23 @@
+// models.js
+export const modelRanks = [
+  { name: "手搓模型 0.1b", min: 0 },
+  { name: "NanoGPT", min: 3 },
+  { name: "Qwen 1.5-0.5B", min: 6 },
+  { name: "Deepseek Coder 1.3B", min: 10 },
+  { name: "BLOOMZ-1B1", min: 15 },
+  { name: "通义千问 Qwen 1.5B", min: 20 },
+  { name: "Mistral 7B", min: 28 },
+  { name: "LLaMA 2-7B", min: 36 },
+  { name: "Baichuan 2-13B", min: 45 },
+  { name: "ChatGLM3-6B", min: 55 },
+  { name: "Gemma 7B", min: 65 },
+  { name: "Yi-34B", min: 75 },
+  { name: "GPT-3.5", min: 90 },
+  { name: "Claude 2", min: 110 },
+  { name: "Gemini 1.5 Pro", min: 130 },
+  { name: "GPT-4", min: 150 },
+  { name: "GPT-4o", min: 180 },
+  { name: "OpenHermes-2.5-Mistral", min: 220 },
+  { name: "Deepseek R1-0528", min: 260 },
+  { name: "GPT-5 预览版（玄学炼成）", min: 300 },
+];
