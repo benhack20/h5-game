@@ -185,6 +185,11 @@ function endGame() {
   // 添加分享按钮事件
   shareButton.onclick = async () => {
     try {
+      // 添加加载动画
+      shareButton.classList.add('loading');
+      const originalText = shareButton.innerHTML;
+      shareButton.innerHTML = '<span>分享战绩</span>';
+
       // 创建一个临时容器用于截图
       const shareContainer = document.createElement('div');
       shareContainer.className = 'share-container';
@@ -215,26 +220,23 @@ function endGame() {
       const isWeixinBrowser = /MicroMessenger/i.test(navigator.userAgent);
       
       if (isWeixinBrowser) {
-        // 在微信中，显示图片让用户手动保存
-        const imgWindow = window.open('');
-        imgWindow.document.write(`
-          <html>
-            <head>
-              <title>炼丹战绩</title>
-              <style>
-                body { margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; background: #000; }
-                img { max-width: 100%; height: auto; }
-                .tip { color: white; text-align: center; margin-top: 20px; }
-              </style>
-            </head>
-            <body>
-              <div>
-                <img src="${image}" alt="炼丹战绩" />
-                <div class="tip">长按图片保存</div>
-              </div>
-            </body>
-          </html>
-        `);
+        // 在微信中，在当前页面显示图片
+        const shareOverlay = document.createElement('div');
+        shareOverlay.className = 'share-overlay';
+        shareOverlay.innerHTML = `
+          <div class="share-image-container">
+            <img src="${image}" alt="炼丹战绩" />
+            <div class="share-tip">长按图片保存</div>
+            <button class="share-close">关闭</button>
+          </div>
+        `;
+        document.body.appendChild(shareOverlay);
+
+        // 添加关闭按钮事件
+        const closeButton = shareOverlay.querySelector('.share-close');
+        closeButton.onclick = () => {
+          document.body.removeChild(shareOverlay);
+        };
       } else {
         // 在普通浏览器中，使用下载功能
         const link = document.createElement('a');
@@ -277,6 +279,10 @@ function endGame() {
     } catch (error) {
       console.error('生成分享图片失败:', error);
       alert('生成分享图片失败，请重试');
+    } finally {
+      // 移除加载动画
+      shareButton.classList.remove('loading');
+      shareButton.innerHTML = originalText;
     }
   };
   
