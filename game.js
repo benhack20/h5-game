@@ -211,11 +211,37 @@ function endGame() {
       // 将canvas转换为图片
       const image = canvas.toDataURL('image/png');
 
-      // 创建下载链接
-      const link = document.createElement('a');
-      link.download = '炼丹战绩.png';
-      link.href = image;
-      link.click();
+      // 判断是否在微信环境中
+      const isWeixinBrowser = /MicroMessenger/i.test(navigator.userAgent);
+      
+      if (isWeixinBrowser) {
+        // 在微信中，显示图片让用户手动保存
+        const imgWindow = window.open('');
+        imgWindow.document.write(`
+          <html>
+            <head>
+              <title>炼丹战绩</title>
+              <style>
+                body { margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; background: #000; }
+                img { max-width: 100%; height: auto; }
+                .tip { color: white; text-align: center; margin-top: 20px; }
+              </style>
+            </head>
+            <body>
+              <div>
+                <img src="${image}" alt="炼丹战绩" />
+                <div class="tip">长按图片保存</div>
+              </div>
+            </body>
+          </html>
+        `);
+      } else {
+        // 在普通浏览器中，使用下载功能
+        const link = document.createElement('a');
+        link.download = '炼丹战绩.png';
+        link.href = image;
+        link.click();
+      }
 
       // 清理临时元素
       document.body.removeChild(shareContainer);
