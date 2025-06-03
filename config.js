@@ -7,8 +7,8 @@ export const config = {
   furnacePulseInterval: 0.65,
   
   // 游戏倒计时（秒）
-  gameDuration: 1,
+  gameDuration: 30,
   
   // 正负面物品出现概率
-  positiveItemProbability: 0.7,  // 70%概率出现正面物品
+  positiveItemProbability: 0.6,  // 70%概率出现正面物品
 }; 

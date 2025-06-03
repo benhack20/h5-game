@@ -32,6 +32,7 @@ function resetGame() {
   // 重置样式
   furnace.style.pointerEvents = 'auto';
   furnace.classList.remove('active');
+  furnace.classList.add('pulse');
   furnace.style.animation = '';
   
   // 清除所有定时器
@@ -145,7 +146,8 @@ function startGame() {
   updateScore(0);
   resultDisplay.textContent = '';
   furnace.style.pointerEvents = 'auto';
-  furnace.classList.add('active');  // 添加动画类
+  furnace.classList.remove('pulse');
+  furnace.classList.add('active');  // 添加气泡效果
 
   // 倒计时开始
   gameInterval = setInterval(() => {

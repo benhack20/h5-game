@@ -152,6 +152,31 @@ body {
   transform: scale(0);
 }
 
+#furnace {
+  width: 300px;
+  height: 300px;
+  margin: 20px auto;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  background-image: url('furnace.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#furnace.pulse {
+  animation: pulse var(--furnace-pulse-interval) ease-in-out infinite;
+}
+
+#furnace.active {
+  animation: none;
+}
+
 #furnace.active .bubble {
   display: block !important;
 }
@@ -194,27 +219,6 @@ body {
 .bubble:nth-child(8) {
   left: 45%;
   animation: float 2s ease-in-out infinite 2.1s;
-}
-
-#furnace {
-  width: 300px;
-  height: 300px;
-  margin: 20px auto;
-  cursor: pointer;
-  user-select: none;
-  -webkit-tap-highlight-color: transparent;
-  background-image: url('furnace.png');
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-#furnace.active {
-  animation: pulse var(--furnace-pulse-interval) ease-in-out infinite;
 }
 
 #furnace-content {
