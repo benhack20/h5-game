@@ -29,14 +29,29 @@ function getCurrentModel(score) {
 }
 
 function updateModelDisplay() {
-  modelDisplay.textContent = `当前模型：${getCurrentModel(score)}`;
+  modelDisplay.textContent = getCurrentModel(score);
+}
+
+function showScorePopup(score, isError = false) {
+  const popup = document.createElement('div');
+  popup.className = isError ? 'error-popup' : 'score-popup';
+  popup.textContent = score > 0 ? `+${score}` : `${score}`;
+  furnace.appendChild(popup);
+  
+  // 动画结束后移除元素
+  popup.addEventListener('animationend', () => {
+    popup.remove();
+  });
 }
 
 function updateScore(change) {
   score += change;
   if(score < 0) score = 0; // 分数不能为负
-  scoreDisplay.textContent = `分数：${score}`;
+  scoreDisplay.textContent = score;
   updateModelDisplay();
+  if (change !== 0) {
+    showScorePopup(change, change < 0);
+  }
 }
 
 function getRandomItem() {
@@ -69,6 +84,8 @@ function shakeFurnace() {
 }
 
 function showNextItem() {
+  if (!isGameStarted) return;  // 如果游戏已结束，不显示新物品
+  
   const item = getRandomItem();
   // 先移除动画类
   furnaceContent.classList.remove('drop-in');
@@ -78,10 +95,11 @@ function showNextItem() {
   furnaceContent.classList.add('drop-in');
   furnaceContent.textContent = `${item.emoji} ${item.name}`;
   furnace.onclick = () => {
-    if (isShaking) return;  // 如果正在震动，不响应点击
+    if (!isGameStarted || isShaking) return;  // 如果游戏已结束或正在震动，不响应点击
     
     if (item.score < 0) {
       // 点击了负面物品，触发震动
+      showScorePopup(item.score, true);  // 显示错误提示
       shakeFurnace();
     } else {
       // 点击了正面物品，正常处理
@@ -123,7 +141,6 @@ function endGame() {
   clearInterval(itemInterval);
   furnaceContent.textContent = '🔥';
   furnace.style.pointerEvents = 'none';
-  furnace.classList.remove('active');  // 移除动画类
   isGameStarted = false;
   const model = getCurrentModel(score);
   resultDisplay.innerHTML = `你炼出了 <strong>${model}</strong>！<br/>分数：${score}<br/>想用真算力？快试试启迪之星算力服务！`;

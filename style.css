@@ -47,21 +47,15 @@ body {
 
 @keyframes float {
   0% {
-    transform: translateY(20px) scale(0);
-    opacity: 0;
-    visibility: hidden;
-  }
-  1% {
-    visibility: visible;
+    transform: translateY(0) scale(0);
     opacity: 0;
   }
-  50% {
+  20% {
     opacity: 0.8;
   }
   100% {
     transform: translateY(-120px) scale(1);
     opacity: 0;
-    visibility: visible;
   }
 }
 
@@ -80,6 +74,44 @@ body {
   }
 }
 
+@keyframes scorePopup {
+  0% {
+    transform: translate(-50%, 0) scale(0.5);
+    opacity: 0;
+  }
+  20% {
+    transform: translate(-50%, -20px) scale(1.5);
+    opacity: 1;
+  }
+  80% {
+    transform: translate(-50%, -40px) scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -60px) scale(1);
+    opacity: 0;
+  }
+}
+
+@keyframes errorPopup {
+  0% {
+    transform: translate(-50%, 0) scale(0.5);
+    opacity: 0;
+  }
+  20% {
+    transform: translate(-50%, -20px) scale(1.5);
+    opacity: 1;
+  }
+  80% {
+    transform: translate(-50%, -40px) scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -60px) scale(1);
+    opacity: 0;
+  }
+}
+
 .bubble {
   position: absolute;
   width: 25px;
@@ -88,7 +120,12 @@ body {
   border-radius: 50%;
   pointer-events: none;
   top: 30%;
-  visibility: hidden;
+  opacity: 0;
+  transform: scale(0);
+}
+
+#furnace.active .bubble {
+  display: block !important;
 }
 
 .bubble:nth-child(1) {
@@ -229,4 +266,60 @@ button:disabled {
   100% {
     transform: scale(1);
   }
+}
+
+.score-popup {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 32px;
+  color: #00ff00;
+  text-shadow: 
+    0 0 10px rgba(0, 255, 0, 0.5),
+    2px 2px 4px rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+  animation: scorePopup 1s ease-out forwards;
+  z-index: 100;
+  font-weight: bold;
+}
+
+.error-popup {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 32px;
+  color: #ff3333;
+  text-shadow: 
+    0 0 10px rgba(255, 51, 51, 0.5),
+    2px 2px 4px rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+  animation: errorPopup 1s ease-out forwards;
+  z-index: 100;
+  font-weight: bold;
+}
+
+#score {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 24px;
+  color: #ff4444;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  margin: 10px 0;
+  padding: 8px 16px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+  display: block;
+}
+
+#current-model {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 20px;
+  color: #ffcc00;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  margin: 10px 0;
+  padding: 8px 16px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+  display: block;
 }
