@@ -16,11 +16,34 @@ const timerDisplay = document.getElementById('timer');
 const resultDisplay = document.getElementById('result');
 const modelDisplay = document.getElementById('current-model');
 
+function resetGame() {
+  // 重置所有状态
+  score = 0;
+  timeLeft = config.gameDuration;
+  isGameStarted = false;
+  isShaking = false;
+  
+  // 重置显示
+  scoreDisplay.textContent = '0';
+  timerDisplay.textContent = `${config.gameDuration}s`;
+  modelDisplay.textContent = 'raw model 0.1b';
+  furnaceContent.textContent = '猛戳炼丹炉\n开始训练大模型';
+  
+  // 重置样式
+  furnace.style.pointerEvents = 'auto';
+  furnace.classList.remove('active');
+  furnace.style.animation = '';
+  
+  // 清除所有定时器
+  clearInterval(gameInterval);
+  clearInterval(itemInterval);
+}
+
 function getCurrentModel(score) {
-  let current = modelRanks[0].name;
+  let current = modelRanks[0];
   for (let i = 0; i < modelRanks.length; i++) {
     if (score >= modelRanks[i].min) {
-      current = modelRanks[i].name;
+      current = modelRanks[i];
     } else {
       break;
     }
@@ -29,7 +52,7 @@ function getCurrentModel(score) {
 }
 
 function updateModelDisplay() {
-  modelDisplay.textContent = getCurrentModel(score);
+  modelDisplay.textContent = getCurrentModel(score).name;
 }
 
 function showScorePopup(score, isError = false) {
@@ -143,7 +166,124 @@ function endGame() {
   furnace.style.pointerEvents = 'none';
   isGameStarted = false;
   const model = getCurrentModel(score);
-  resultDisplay.innerHTML = `你炼出了 <strong>${model}</strong>！<br/>分数：${score}<br/>想用真算力？快试试启迪之星算力服务！`;
+  
+  // 显示结算界面
+  const resultOverlay = document.querySelector('.result-overlay');
+  const resultModel = document.querySelector('.result-model');
+  const resultMessage = document.querySelector('.result-message');
+  const resultButton = document.querySelector('.result-button:not(.share-button)');
+  const shareButton = document.querySelector('.share-button');
+  
+  // 设置结算内容
+  resultModel.textContent = model.name;
+  resultMessage.textContent = model.description;
+  
+  // 显示结算界面
+  resultOverlay.classList.add('show');
+  resultModel.classList.add('model-reveal');
+  
+  // 添加分享按钮事件
+  shareButton.onclick = async () => {
+    try {
+      // 创建一个临时容器用于截图
+      const shareContainer = document.createElement('div');
+      shareContainer.className = 'share-container';
+      shareContainer.innerHTML = `
+        <div class="share-content">
+          <h2>🔥 大模型炼丹场</h2>
+          <div class="share-model">${model.name}</div>
+          <div class="share-score">最终得分：${score}</div>
+          <div class="share-message">${model.description}</div>
+          <div class="share-qrcode">
+            <img src="qrcode.png" alt="扫码体验" />
+            <p>扫码体验</p>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(shareContainer);
+
+      // 使用html2canvas生成图片
+      const canvas = await html2canvas(shareContainer, {
+        backgroundColor: '#2d2d2d',
+        scale: 2, // 提高清晰度
+      });
+
+      // 将canvas转换为图片
+      const image = canvas.toDataURL('image/png');
+
+      // 创建下载链接
+      const link = document.createElement('a');
+      link.download = '炼丹战绩.png';
+      link.href = image;
+      link.click();
+
+      // 清理临时元素
+      document.body.removeChild(shareContainer);
+      
+      // 关闭结算界面
+      resultOverlay.classList.remove('show');
+      resultModel.classList.remove('model-reveal');
+      resetGame();
+      
+      // 重新绑定点击事件
+      furnace.onclick = () => {
+        if (!isGameStarted) {
+          startGame();
+          return;
+        }
+        
+        if (isShaking) return;  // 如果正在震动，不响应点击
+        
+        const currentItem = getRandomItem();
+        if (currentItem.score < 0) {
+          // 点击了负面物品，触发震动
+          shakeFurnace();
+        } else {
+          // 点击了正面物品，正常处理
+          updateScore(currentItem.score);
+          // 清除当前定时器
+          clearInterval(itemInterval);
+          // 设置新的定时器
+          itemInterval = setInterval(showNextItem, config.contentSwitchInterval);
+          showNextItem();  // 点击后马上切换到下一条
+        }
+      };
+    } catch (error) {
+      console.error('生成分享图片失败:', error);
+      alert('生成分享图片失败，请重试');
+    }
+  };
+  
+  // 添加重新开始按钮事件
+  resultButton.onclick = () => {
+    resultOverlay.classList.remove('show');
+    resultModel.classList.remove('model-reveal');
+    resetGame();
+    // 重新绑定点击事件
+    furnace.onclick = () => {
+      if (!isGameStarted) {
+        startGame();
+        return;
+      }
+      
+      if (isShaking) return;  // 如果正在震动，不响应点击
+      
+      const currentItem = getRandomItem();
+      if (currentItem.score < 0) {
+        // 点击了负面物品，触发震动
+        shakeFurnace();
+      } else {
+        // 点击了正面物品，正常处理
+        updateScore(currentItem.score);
+        // 清除当前定时器
+        clearInterval(itemInterval);
+        // 设置新的定时器
+        itemInterval = setInterval(showNextItem, config.contentSwitchInterval);
+        showNextItem();  // 点击后马上切换到下一条
+      }
+    };
+  };
+  
   timerDisplay.textContent = `0s`;
 }
 

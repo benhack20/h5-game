@@ -7,6 +7,7 @@
   <title>大模型炼丹场</title>
   <link rel="stylesheet" href="style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
   <script type="module">
     import { config } from './config.js';
     document.documentElement.style.setProperty('--furnace-pulse-interval', `${config.furnacePulseInterval}s`);
@@ -29,10 +30,21 @@
       <div class="bubble" style="display: none;"></div>
       <div class="bubble" style="display: none;"></div>
       <div class="bubble" style="display: none;"></div>
-      <div id="furnace-content">猛戳炼丹炉，开始炼丹</div>
+      <div id="furnace-content">猛戳炼丹炉<br>开始训练大模型</div>
     </div>
     <div id="timer">30s</div>
     <div id="result"></div>
+  </div>
+  <div class="result-overlay">
+    <div class="result-modal">
+      <div class="result-title">你炼出了：</div>
+      <div class="result-model"></div>
+      <div class="result-message"></div>
+      <div class="result-buttons">
+        <button class="result-button">再炼一次</button>
+        <button class="result-button share-button">分享战绩</button>
+      </div>
+    </div>
   </div>
   <script type="module" src="game.js"></script>
 </body>
