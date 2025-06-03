@@ -8,6 +8,7 @@ let gameInterval = null;      // 控制倒计时
 let itemInterval = null;      // 控制item自动切换
 let isShaking = false;        // 控制是否在震动中
 let isGameStarted = false;
+let isGameEnded = false;
 
 const scoreDisplay = document.getElementById('score');
 const furnace = document.getElementById('furnace');
@@ -22,6 +23,7 @@ function resetGame() {
   timeLeft = config.gameDuration;
   isGameStarted = false;
   isShaking = false;
+  isGameEnded = false;
   
   // 重置显示
   scoreDisplay.textContent = '0';
@@ -108,7 +110,7 @@ function shakeFurnace() {
 }
 
 function showNextItem() {
-  if (!isGameStarted) return;  // 如果游戏已结束，不显示新物品
+  if (!isGameStarted || isGameEnded) return;  // 如果游戏已结束，不显示新物品
   
   const item = getRandomItem();
   // 先移除动画类
@@ -162,6 +164,7 @@ function startGame() {
 }
 
 function endGame() {
+  isGameEnded = true;
   clearInterval(gameInterval);
   clearInterval(itemInterval);
   furnaceContent.textContent = '🔥';
@@ -323,7 +326,7 @@ function endGame() {
 
 // 初始化点击事件
 furnace.onclick = () => {
-  if (!isGameStarted) {
+  if (!isGameStarted || isGameEnded) {
     startGame();
     return;
   }
