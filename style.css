@@ -119,6 +119,7 @@ body {
   margin: 20px auto;
   cursor: pointer;
   user-select: none;
+  -webkit-tap-highlight-color: transparent;
   background-image: url('furnace.png');
   background-size: contain;
   background-repeat: no-repeat;
