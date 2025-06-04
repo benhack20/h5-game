@@ -10,6 +10,8 @@ let isShaking = false;        // 控制是否在震动中
 let isGameStarted = false;
 let isGameEnded = false;
 let clickedErrors = [];       // 记录点击过的错误选项
+let lastClickTime = 0;        // 记录上次点击时间
+let isAnimating = false;      // 控制是否正在动画中
 
 const scoreDisplay = document.getElementById('score');
 const furnace = document.getElementById('furnace');
@@ -172,6 +174,7 @@ function showNextItem() {
   if (!isGameStarted || isGameEnded) return;  // 如果游戏已结束，不显示新物品
   
   const item = getRandomItem();
+  
   // 先移除动画类
   furnaceContent.classList.remove('drop-in');
   // 触发重排以重新开始动画
@@ -187,8 +190,14 @@ function showNextItem() {
   }
   
   furnaceContent.textContent = `${item.emoji} ${item.name}`;
+  
   furnace.onclick = () => {
     if (!isGameStarted || isShaking) return;  // 如果游戏已结束或正在震动，不响应点击
+    
+    // 检查点击间隔，如果小于300毫秒则忽略
+    const now = Date.now();
+    if (now - lastClickTime < 300) return;
+    lastClickTime = now;
     
     if (item.score < 0) {
       // 点击了负面物品，触发震动
