@@ -117,6 +117,18 @@ body {
   100% { transform: rotate(360deg); }
 }
 
+@keyframes blink {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
 .loading {
   position: relative;
   pointer-events: none;
@@ -1031,4 +1043,21 @@ button:disabled {
     transform: scale(0.8);
     opacity: 0.4;
   }
+}
+
+.inactivity-tip {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #ffcc00;
+  padding: 15px 25px;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: bold;
+  z-index: 1000;
+  text-shadow: 0 0 10px rgba(255, 204, 0, 0.5);
+  box-shadow: 0 0 20px rgba(255, 204, 0, 0.3);
+  pointer-events: none;
 }

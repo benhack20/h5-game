@@ -23,6 +23,8 @@ let isGameEnded = false;
 let clickedErrors = [];       // 记录点击过的错误选项
 let lastClickTime = 0;        // 记录上次点击时间
 let isAnimating = false;      // 控制是否正在动画中
+let inactivityTimer = null;   // 控制不活跃提示的定时器
+let inactivityTimeout = 3000; // 3秒不活跃后显示提示
 
 const scoreDisplay = document.getElementById('score');
 const furnace = document.getElementById('furnace');
@@ -232,6 +234,36 @@ function showNextItem() {
   };
 }
 
+function showInactivityTip() {
+  const tip = document.createElement('div');
+  tip.className = 'inactivity-tip';
+  tip.textContent = '点击炼丹炉才能加分！';
+  document.body.appendChild(tip);
+  
+  // 添加闪烁动画
+  tip.style.animation = 'blink 1s ease-in-out infinite';
+  
+  // 点击时移除提示
+  document.addEventListener('click', function removeTip() {
+    if (tip.parentNode) {
+      tip.parentNode.removeChild(tip);
+    }
+    document.removeEventListener('click', removeTip);
+  }, { once: true });
+}
+
+function resetInactivityTimer() {
+  // 清除现有定时器
+  if (inactivityTimer) {
+    clearTimeout(inactivityTimer);
+  }
+  
+  // 如果游戏已经开始且未结束，设置新的定时器
+  if (isGameStarted && !isGameEnded) {
+    inactivityTimer = setTimeout(showInactivityTip, inactivityTimeout);
+  }
+}
+
 function startGame() {
   if (isGameStarted) return;
   
@@ -260,12 +292,18 @@ function startGame() {
   // item自动快速切换
   showNextItem();
   itemInterval = setInterval(showNextItem, config.contentSwitchInterval);
+  
+  // 启动不活跃检测
+  resetInactivityTimer();
 }
 
 function endGame() {
   isGameEnded = true;
   clearInterval(gameInterval);
   clearInterval(itemInterval);
+  if (inactivityTimer) {
+    clearTimeout(inactivityTimer);
+  }
   furnaceContent.textContent = '🔥';
   furnace.style.pointerEvents = 'none';
   isGameStarted = false;
@@ -530,6 +568,9 @@ furnace.onclick = () => {
   }
   
   if (isShaking) return;  // 如果正在震动，不响应点击
+  
+  // 重置不活跃定时器
+  resetInactivityTimer();
   
   const currentItem = getRandomItem();
   if (currentItem.score < 0) {
