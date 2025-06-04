@@ -36,6 +36,7 @@ function resetGame() {
   furnace.classList.remove('active');
   furnace.classList.add('pulse');
   furnace.style.animation = '';
+  furnaceContent.classList.remove('negative-item');  // 移除负面物品样式
   
   // 清除所有定时器
   clearInterval(gameInterval);
@@ -119,6 +120,14 @@ function showNextItem() {
   void furnaceContent.offsetWidth;
   // 添加动画类
   furnaceContent.classList.add('drop-in');
+  
+  // 根据物品类型设置样式
+  if (item.score < 0) {
+    furnaceContent.classList.add('negative-item');
+  } else {
+    furnaceContent.classList.remove('negative-item');
+  }
+  
   furnaceContent.textContent = `${item.emoji} ${item.name}`;
   furnace.onclick = () => {
     if (!isGameStarted || isShaking) return;  // 如果游戏已结束或正在震动，不响应点击
@@ -200,13 +209,26 @@ function endGame() {
       shareContainer.className = 'share-container';
       shareContainer.innerHTML = `
         <div class="share-content">
-          <h2>🔥 大模型炼丹场</h2>
+          <div class="share-furnace">
+            <img src="furnace.png" alt="炼丹炉" class="share-furnace-img" />
+            <div class="share-furnace-text">猛戳炼丹炉<br>开始训练大模型</div>
+          </div>
+          <div class="share-header">
+            <h2>🔥 大模型炼丹场</h2>
+            <div class="share-subtitle">我在30秒内炼出了</div>
+          </div>
           <div class="share-model">${model.name}</div>
-          <div class="share-score">最终得分：${score}</div>
+          <div class="share-score-container">
+            <div class="share-score-label">最终得分</div>
+            <div class="share-score">${score}</div>
+          </div>
           <div class="share-message">${model.description}</div>
-          <div class="share-qrcode">
-            <img src="qrcode.png" alt="扫码体验" />
-            <p>扫码体验</p>
+          <div class="share-footer">
+            <div class="share-tagline">你能炼出什么模型？</div>
+            <div class="share-qrcode">
+              <img src="qrcode.png" alt="扫码体验" />
+              <p>扫码来挑战</p>
+            </div>
           </div>
         </div>
       `;
