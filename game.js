@@ -56,6 +56,9 @@ function resetGame() {
   // 清除所有定时器
   clearInterval(gameInterval);
   clearInterval(itemInterval);
+
+  // 添加手指提示
+  showFingerPointer();
 }
 
 function getCurrentModel(score) {
@@ -240,6 +243,12 @@ function startGame() {
   furnace.style.pointerEvents = 'auto';
   furnace.classList.remove('pulse');
   furnace.classList.add('active');  // 添加气泡效果
+
+  // 移除手指提示
+  const fingerPointer = document.querySelector('.finger-pointer');
+  if (fingerPointer) {
+    fingerPointer.remove();
+  }
 
   // 倒计时开始
   gameInterval = setInterval(() => {
@@ -536,3 +545,38 @@ furnace.onclick = () => {
     showNextItem();  // 点击后马上切换到下一条
   }
 };
+
+// 添加手指提示函数
+function showFingerPointer() {
+  // 移除已存在的手指提示
+  const existingPointer = document.querySelector('.finger-pointer');
+  if (existingPointer) {
+    existingPointer.remove();
+  }
+
+  // 创建新的手指提示元素
+  const fingerPointer = document.createElement('div');
+  fingerPointer.className = 'finger-pointer';
+  
+  // 获取炼丹炉文字的位置
+  const furnaceContentRect = furnaceContent.getBoundingClientRect();
+  
+  // 设置手指提示的位置，放在文字下方
+  fingerPointer.style.left = `${furnaceContentRect.left + furnaceContentRect.width / 2 - 20}px`;
+  fingerPointer.style.top = `${furnaceContentRect.bottom + 10}px`;
+  
+  // 添加到页面
+  document.body.appendChild(fingerPointer);
+}
+
+// 在页面加载完成后显示手指提示
+window.addEventListener('load', () => {
+  showFingerPointer();
+});
+
+// 在窗口大小改变时更新手指提示位置
+window.addEventListener('resize', () => {
+  if (!isGameStarted) {
+    showFingerPointer();
+  }
+});
