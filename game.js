@@ -1,5 +1,5 @@
 import { positiveItems, negativeItems } from './items.js';
-import { modelRanks } from './models.js';
+import { modelRanks, MODEL_RANKS } from './models.js';
 import { config } from './config.js';
 
 // 宣传语数组
@@ -279,6 +279,8 @@ function startGame() {
 }
 
 function endGame() {
+  if (isGameEnded) return;
+  
   isGameEnded = true;
   clearInterval(gameInterval);
   clearInterval(itemInterval);
@@ -297,6 +299,19 @@ function endGame() {
   isGameStarted = false;
   const model = getCurrentModel(score);
   
+  // 计算最终得分
+  const finalScore = Math.floor(score);
+  
+  // 计算模型等级
+  let modelRank = MODEL_RANKS.BEGINNER.name;
+  if (finalScore >= MODEL_RANKS.EXPERT.min) {
+    modelRank = MODEL_RANKS.EXPERT.name;
+  } else if (finalScore >= MODEL_RANKS.ADVANCED.min) {
+    modelRank = MODEL_RANKS.ADVANCED.name;
+  } else if (finalScore >= MODEL_RANKS.INTERMEDIATE.min) {
+    modelRank = MODEL_RANKS.INTERMEDIATE.name;
+  }
+  
   // 显示结算界面
   const resultOverlay = document.querySelector('.result-overlay');
   const resultModel = document.querySelector('.result-model');
@@ -306,6 +321,10 @@ function endGame() {
   
   // 设置结算内容
   resultModel.textContent = model.name;
+  
+  // 修改结算标题
+  const resultTitle = document.querySelector('.result-title');
+  resultTitle.textContent = `你炼出了${modelRank}模型：`;
   
   // 生成错误总结
   let errorSummary = '';
@@ -335,7 +354,7 @@ function endGame() {
     <div class="model-description">${model.description}</div>
     <div class="result-score">
       <div class="result-score-label">最终得分</div>
-      <div class="result-score-value">${score}</div>
+      <div class="result-score-value">${finalScore}</div>
     </div>
     ${errorSummary ? `
       <div class="error-summary">
@@ -368,13 +387,13 @@ function endGame() {
           </div>
           <div class="share-header">
             <h2><span class="fire-emoji">🔥</span>大模型炼丹场</h2>
-            <div class="share-subtitle">我在<span class="time-number">${config.gameDuration}</span>秒内炼出了</div>
+            <div class="share-subtitle">我在<span class="time-number">${config.gameDuration}</span>秒内炼出了${modelRank}模型</div>
           </div>
           <div class="share-model">${model.name}</div>
           <div class="share-message">${model.description}</div>
           <div class="share-score">
             <div class="share-score-label">最终得分</div>
-            <div class="share-score-value">${score}</div>
+            <div class="share-score-value">${finalScore}</div>
           </div>
           ${errorSummary ? `
             <div class="share-error-summary">

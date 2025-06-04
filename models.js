@@ -1,3 +1,11 @@
+// 模型等级定义
+export const MODEL_RANKS = {
+  BEGINNER: { name: "初级", min: 0, max: 50 },
+  INTERMEDIATE: { name: "中级", min: 50, max: 150 },
+  ADVANCED: { name: "高级", min: 150, max: 250 },
+  EXPERT: { name: "顶级", min: 250, max: Infinity }
+};
+
 export const modelRanks = [
   {
     name: "Qwen1.5-0.5B",
@@ -134,4 +142,4 @@ export const modelRanks = [
     min: 300,
     description: "这是一个神秘的彩蛋模型，据说参数高达130000亿，具有超级强大的推理能力和创造力，是人类文明史上最强悍的模型。"
   }
-]
+];

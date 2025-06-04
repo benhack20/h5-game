@@ -8,8 +8,8 @@ export const positiveItems = [
   { name: "挖到外星科技算力", emoji: "👽", score: 5 },
   
   // 资金支持
-  { name: "马斯克看中投10亿", emoji: "💰", score: 25 },
-  { name: "大爷广场舞众筹1亿", emoji: "💃", score: 5 },
+  { name: "马斯克看中投10亿", emoji: "💰", score: 24 },
+  { name: "众筹获得1个小目标", emoji: "💃", score: 5 },
   { name: "靠颜值获得天使投资", emoji: "✨", score: 4 },
   { name: "获启迪之星算力补贴", emoji: "🏛️", score: 5 },
   
@@ -18,8 +18,8 @@ export const positiveItems = [
   { name: "天才实习生贡献代码", emoji: "🚄", score: 4 },
   
   // 技术突破
-  { name: "模型学会自己炼丹", emoji: "🧪", score: 30 },
-  { name: "模型出现自我意识", emoji: "🤖", score: 50 },
+  { name: "模型学会自己炼丹", emoji: "🧪", score: 24 },
+  { name: "模型出现自我意识", emoji: "🤖", score: 24 },
   
   // 商业机会
   { name: "大厂半夜敲门求合作", emoji: "🌙", score: 8 },
