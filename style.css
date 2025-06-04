@@ -397,10 +397,13 @@ button:disabled {
   background: rgba(0, 0, 0, 0.8);
   display: none;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   z-index: 1000;
   opacity: 0;
   transition: opacity 0.3s ease;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 20px 0;
 }
 
 .result-overlay.show {
@@ -411,8 +414,9 @@ button:disabled {
 .result-modal {
   background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
   border-radius: 20px;
-  padding: 30px;
-  width: 320px;
+  padding: 20px;
+  width: 90%;
+  max-width: 320px;
   text-align: center;
   position: relative;
   transform: scale(0.8);
@@ -420,6 +424,7 @@ button:disabled {
   transition: all 0.3s ease;
   box-shadow: 0 0 30px rgba(255, 68, 68, 0.2);
   border: 2px solid rgba(255, 68, 68, 0.3);
+  margin: 20px auto;
 }
 
 .result-overlay.show .result-modal {
@@ -429,17 +434,17 @@ button:disabled {
 
 .result-title {
   color: #ff4444;
-  font-size: 20px;
-  margin-bottom: 20px;
+  font-size: 18px;
+  margin-bottom: 15px;
   text-shadow: 0 0 10px rgba(255, 68, 68, 0.5);
 }
 
 .result-model {
   font-family: 'Press Start 2P', cursive;
   color: #ffcc00;
-  font-size: 20px;
-  margin: 15px 0;
-  padding: 15px;
+  font-size: 18px;
+  margin: 10px 0;
+  padding: 12px;
   background: rgba(0, 0, 0, 0.3);
   border-radius: 10px;
   border: 2px solid rgba(255, 204, 0, 0.3);
@@ -448,49 +453,50 @@ button:disabled {
 }
 
 .result-score {
-  margin: 15px 0;
-  text-align: center;
+  margin: 12px 0;
 }
 
 .result-score-label {
   font-family: 'Press Start 2P', cursive;
   color: #ffffff;
   font-size: 12px;
-  margin-bottom: 5px;
+  margin-bottom: 4px;
   opacity: 0.8;
 }
 
 .result-score-value {
   font-family: 'Press Start 2P', cursive;
   color: #4CAF50;
-  font-size: 28px;
+  font-size: 24px;
   text-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
 }
 
 .result-message {
   color: #ffffff;
   font-size: 14px;
-  margin: 20px 0;
-  line-height: 1.6;
-  padding: 0 10px;
+  margin: 15px 0;
+  line-height: 1.5;
+  padding: 0 8px;
 }
 
 .model-description {
-  margin-bottom: 20px;
-  padding: 15px;
+  margin-bottom: 15px;
+  padding: 12px;
   background: rgba(0, 0, 0, 0.2);
   border-radius: 8px;
   border: 1px solid rgba(255, 204, 0, 0.2);
   text-align: left;
+  font-size: 13px;
 }
 
 .error-summary {
-  padding: 15px;
+  padding: 12px;
   background: rgba(255, 68, 68, 0.1);
   border-radius: 8px;
   border: 1px solid rgba(255, 68, 68, 0.2);
   text-align: left;
   white-space: pre-line;
+  font-size: 13px;
 }
 
 .error-title {
@@ -498,12 +504,12 @@ button:disabled {
   font-weight: bold;
   margin-bottom: 4px;
   text-align: center;
-  font-size: 15px;
+  font-size: 14px;
 }
 
 .error-list {
   margin-top: 4px;
-  line-height: 1.6;
+  line-height: 1.5;
 }
 
 .error-list::after {
@@ -517,25 +523,25 @@ button:disabled {
 
 .result-buttons {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   justify-content: center;
-  margin-top: 20px;
+  margin-top: 15px;
 }
 
 .result-button {
   background: #ff4444;
   color: white;
   border: none;
-  padding: 12px 24px;
+  padding: 10px 20px;
   font-family: 'Press Start 2P', cursive;
-  font-size: 14px;
+  font-size: 12px;
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s ease;
   box-shadow: 0 4px 15px rgba(255, 68, 68, 0.3);
   text-shadow: none;
   flex: 1;
-  max-width: 200px;
+  max-width: 180px;
 }
 
 .share-button {
