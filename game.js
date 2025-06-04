@@ -52,7 +52,7 @@ function resetGame() {
   furnace.style.pointerEvents = 'auto';
   furnace.classList.remove('active');
   furnace.classList.add('pulse');
-  furnace.style.animation = '';
+  furnace.style.animation = 'pulse var(--furnace-pulse-interval) ease-in-out infinite';
   furnaceContent.classList.remove('negative-item');  // 移除负面物品样式
   
   // 清除所有定时器
@@ -206,38 +206,12 @@ function showNextItem() {
   }
   
   furnaceContent.textContent = `${item.emoji} ${item.name}`;
-  
-  furnace.onclick = () => {
-    if (!isGameStarted || isShaking) return;  // 如果游戏已结束或正在震动，不响应点击
-    
-    // 检查点击间隔，如果小于300毫秒则忽略
-    const now = Date.now();
-    if (now - lastClickTime < 300) return;
-    lastClickTime = now;
-    
-    if (item.score < 0) {
-      // 点击了负面物品，触发震动
-      updateScore(item.score);  // 更新分数
-      showScorePopup(item.score, true);  // 显示错误提示
-      shakeFurnace();
-      // 记录错误选项
-      clickedErrors.push({...item});  // 使用解构赋值创建新对象，避免引用问题
-    } else {
-      // 点击了正面物品，正常处理
-      updateScore(item.score);
-      // 清除当前定时器
-      clearInterval(itemInterval);
-      // 设置新的定时器
-      itemInterval = setInterval(showNextItem, config.contentSwitchInterval);
-      showNextItem();  // 点击后马上切换到下一条
-    }
-  };
 }
 
 function showInactivityTip() {
   const tip = document.createElement('div');
   tip.className = 'inactivity-tip';
-  tip.textContent = '点击炼丹炉才能加分！';
+  tip.textContent = '点击炼丹炉才能加分';
   document.body.appendChild(tip);
   
   // 添加闪烁动画
@@ -258,6 +232,12 @@ function resetInactivityTimer() {
     clearTimeout(inactivityTimer);
   }
   
+  // 移除已存在的提示
+  const existingTip = document.querySelector('.inactivity-tip');
+  if (existingTip) {
+    existingTip.remove();
+  }
+  
   // 如果游戏已经开始且未结束，设置新的定时器
   if (isGameStarted && !isGameEnded) {
     inactivityTimer = setTimeout(showInactivityTip, inactivityTimeout);
@@ -273,8 +253,9 @@ function startGame() {
   updateScore(0);
   resultDisplay.textContent = '';
   furnace.style.pointerEvents = 'auto';
-  furnace.classList.remove('pulse');
   furnace.classList.add('active');  // 添加气泡效果
+  furnace.classList.add('pulse');   // 确保添加pulse效果
+  furnace.style.animation = 'pulse var(--furnace-pulse-interval) ease-in-out infinite';  // 强制设置pulse动画
 
   // 移除手指提示
   const fingerPointer = document.querySelector('.finger-pointer');
@@ -579,10 +560,19 @@ furnace.onclick = () => {
   // 重置不活跃定时器
   resetInactivityTimer();
   
+  // 检查点击间隔，如果小于300毫秒则忽略
+  const now = Date.now();
+  if (now - lastClickTime < 300) return;
+  lastClickTime = now;
+  
   const currentItem = getRandomItem();
   if (currentItem.score < 0) {
     // 点击了负面物品，触发震动
+    updateScore(currentItem.score);  // 更新分数
+    showScorePopup(currentItem.score, true);  // 显示错误提示
     shakeFurnace();
+    // 记录错误选项
+    clickedErrors.push({...currentItem});  // 使用解构赋值创建新对象，避免引用问题
   } else {
     // 点击了正面物品，正常处理
     updateScore(currentItem.score);

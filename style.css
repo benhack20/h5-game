@@ -20,7 +20,7 @@ body {
     transform: scale(1);
   }
   50% {
-    transform: scale(1.018);
+    transform: scale(1.03);
   }
   100% {
     transform: scale(1);
@@ -1060,7 +1060,7 @@ button:disabled {
   text-shadow: 0 0 10px rgba(255, 204, 0, 0.5);
   box-shadow: 0 0 20px rgba(255, 204, 0, 0.3);
   pointer-events: none;
-  min-width: 280px;
+  min-width: 200px;
   white-space: nowrap;
   text-align: center;
   display: flex;
