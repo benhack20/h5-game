@@ -304,6 +304,13 @@ function endGame() {
   if (inactivityTimer) {
     clearTimeout(inactivityTimer);
   }
+  
+  // 移除提示框
+  const tip = document.querySelector('.inactivity-tip');
+  if (tip) {
+    tip.remove();
+  }
+  
   furnaceContent.textContent = '🔥';
   furnace.style.pointerEvents = 'none';
   isGameStarted = false;

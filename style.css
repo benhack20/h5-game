@@ -1052,7 +1052,7 @@ button:disabled {
   transform: translate(-50%, -50%);
   background-color: rgba(0, 0, 0, 0.8);
   color: #ffcc00;
-  padding: 15px 25px;
+  padding: 12px 20px;
   border-radius: 8px;
   font-size: 18px;
   font-weight: bold;
@@ -1060,4 +1060,11 @@ button:disabled {
   text-shadow: 0 0 10px rgba(255, 204, 0, 0.5);
   box-shadow: 0 0 20px rgba(255, 204, 0, 0.3);
   pointer-events: none;
+  min-width: 280px;
+  white-space: nowrap;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
 }
