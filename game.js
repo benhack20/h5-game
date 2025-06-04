@@ -25,6 +25,9 @@ let lastClickTime = 0;        // 记录上次点击时间
 let isAnimating = false;      // 控制是否正在动画中
 let inactivityTimer = null;   // 控制不活跃提示的定时器
 let inactivityTimeout = 3000; // 3秒不活跃后显示提示
+let lastActivityTime = 0;     // 记录最后活动时间
+let currentItem = null;  // 添加一个变量来存储当前显示的物品
+let isFirstGame = true;  // 添加变量标记是否是第一局游戏
 
 const scoreDisplay = document.getElementById('score');
 const furnace = document.getElementById('furnace');
@@ -58,6 +61,16 @@ function resetGame() {
   // 清除所有定时器
   clearInterval(gameInterval);
   clearInterval(itemInterval);
+  if (inactivityTimer) {
+    clearTimeout(inactivityTimer);
+    inactivityTimer = null;
+  }
+
+  // 移除所有提示
+  const existingTip = document.querySelector('.inactivity-tip');
+  if (existingTip) {
+    existingTip.remove();
+  }
 
   // 添加手指提示
   showFingerPointer();
@@ -189,7 +202,7 @@ function shakeFurnace() {
 function showNextItem() {
   if (!isGameStarted || isGameEnded) return;  // 如果游戏已结束，不显示新物品
   
-  const item = getRandomItem();
+  currentItem = getRandomItem();  // 更新当前物品
   
   // 先移除动画类
   furnaceContent.classList.remove('drop-in');
@@ -199,13 +212,13 @@ function showNextItem() {
   furnaceContent.classList.add('drop-in');
   
   // 根据物品类型设置样式
-  if (item.score < 0) {
+  if (currentItem.score < 0) {
     furnaceContent.classList.add('negative-item');
   } else {
     furnaceContent.classList.remove('negative-item');
   }
   
-  furnaceContent.textContent = `${item.emoji} ${item.name}`;
+  furnaceContent.textContent = `${currentItem.emoji} ${currentItem.name}`;
 }
 
 function showInactivityTip() {
@@ -230,6 +243,7 @@ function resetInactivityTimer() {
   // 清除现有定时器
   if (inactivityTimer) {
     clearTimeout(inactivityTimer);
+    inactivityTimer = null;
   }
   
   // 移除已存在的提示
@@ -238,9 +252,13 @@ function resetInactivityTimer() {
     existingTip.remove();
   }
   
-  // 如果游戏已经开始且未结束，设置新的定时器
-  if (isGameStarted && !isGameEnded) {
-    inactivityTimer = setTimeout(showInactivityTip, inactivityTimeout);
+  // 只在第一局游戏时启动不活跃检测
+  if (isGameStarted && !isGameEnded && isFirstGame) {
+    inactivityTimer = setTimeout(() => {
+      if (isGameStarted && !isGameEnded) {
+        showInactivityTip();
+      }
+    }, inactivityTimeout);
   }
 }
 
@@ -248,11 +266,12 @@ function startGame() {
   if (isGameStarted) return;
   
   isGameStarted = true;
+  isGameEnded = false;  // 确保游戏结束状态被重置
   score = 0;
   timeLeft = config.gameDuration;
   updateScore(0);
   resultDisplay.textContent = '';
-  furnace.style.pointerEvents = 'auto';
+  
   furnace.classList.add('active');  // 添加气泡效果
   furnace.classList.add('pulse');   // 确保添加pulse效果
   furnace.style.animation = 'pulse var(--furnace-pulse-interval) ease-in-out infinite';  // 强制设置pulse动画
@@ -282,10 +301,13 @@ function endGame() {
   if (isGameEnded) return;
   
   isGameEnded = true;
+  isGameStarted = false;  // 确保游戏状态被重置
+  isFirstGame = false;    // 标记已经不是第一局游戏了
   clearInterval(gameInterval);
   clearInterval(itemInterval);
   if (inactivityTimer) {
     clearTimeout(inactivityTimer);
+    inactivityTimer = null;
   }
   
   // 移除提示框
@@ -296,7 +318,6 @@ function endGame() {
   
   furnaceContent.textContent = '🔥';
   furnace.style.pointerEvents = 'none';
-  isGameStarted = false;
   const model = getCurrentModel(score);
   
   // 计算最终得分
@@ -584,7 +605,6 @@ furnace.onclick = () => {
   if (now - lastClickTime < 300) return;
   lastClickTime = now;
   
-  const currentItem = getRandomItem();
   if (currentItem.score < 0) {
     // 点击了负面物品，触发震动
     updateScore(currentItem.score);  // 更新分数
