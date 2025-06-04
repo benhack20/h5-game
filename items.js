@@ -1,7 +1,7 @@
 // items.js
 export const positiveItems = [
   // 算力资源
-  { name: "矿老板送100张B100", emoji: "🚀", score: 6 },
+  { name: "矿老板送100张B200", emoji: "🚀", score: 6 },
   { name: "卖房买入10张H100", emoji: "🚀", score: 5 },
   { name: "废品站淘到50张3090", emoji: "🖥️", score: 4 },
   { name: "买彩票送4090显卡", emoji: "🎰", score: 3 },
