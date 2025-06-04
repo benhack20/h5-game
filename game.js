@@ -214,8 +214,8 @@ function endGame() {
             <div class="share-furnace-text">猛戳炼丹炉<br>开始训练大模型</div>
           </div>
           <div class="share-header">
-            <h2>🔥 大模型炼丹场</h2>
-            <div class="share-subtitle">我在30秒内炼出了</div>
+            <h2><span class="fire-emoji">🔥</span>大模型炼丹场</h2>
+            <div class="share-subtitle">我在<span class="time-number">${config.gameDuration}</span>秒内炼出了</div>
           </div>
           <div class="share-model">${model.name}</div>
           <div class="share-score-container">

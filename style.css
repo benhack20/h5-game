@@ -590,17 +590,32 @@ button:disabled {
 .share-content h2 {
   font-family: 'Press Start 2P', cursive;
   color: #ff4444;
-  font-size: 24px;
-  margin-bottom: 10px;
+  font-size: 32px;
+  margin-bottom: 15px;
   text-shadow: 0 0 10px rgba(255, 68, 68, 0.5);
+  display: inline-block;
+}
+
+.fire-emoji {
+  display: inline-block;
+  margin-right: 4px;
+  vertical-align: middle;
 }
 
 .share-subtitle {
   font-family: 'Press Start 2P', cursive;
   color: #ffcc00;
-  font-size: 14px;
+  font-size: 24px;
   margin-bottom: 10px;
   text-shadow: 0 0 5px rgba(255, 204, 0, 0.3);
+  display: block;
+}
+
+.time-number {
+  font-family: Arial, sans-serif;
+  font-weight: bold;
+  font-size: 26px;
+  margin: 0 2px;
 }
 
 .share-model {
