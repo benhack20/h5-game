@@ -21,6 +21,7 @@ let isShaking = false;        // 控制是否在震动中
 let isGameStarted = false;
 let isGameEnded = false;
 let clickedErrors = [];       // 记录点击过的错误选项
+let clickedPositives = [];    // 记录点击过的正面物品
 let lastClickTime = 0;        // 记录上次点击时间
 let isAnimating = false;      // 控制是否正在动画中
 let inactivityTimer = null;   // 控制不活跃提示的定时器
@@ -44,6 +45,7 @@ function resetGame() {
   isShaking = false;
   isGameEnded = false;
   clickedErrors = [];  // 重置错误记录
+  clickedPositives = []; // 重置正面物品记录
   
   // 重置显示
   scoreDisplay.textContent = '0';
@@ -350,12 +352,19 @@ function endGame() {
   // 生成错误总结
   let errorSummary = '';
   if (clickedErrors.length > 0) {
+    // 统计每个错误出现的次数
+    const errorCounts = {};
+    clickedErrors.forEach(item => {
+      errorCounts[item.name] = (errorCounts[item.name] || 0) + 1;
+    });
+    
     // 获取所有错误选项的名称（去重）
     const uniqueErrors = [...new Set(clickedErrors.map(item => item.name))];
     
     errorSummary = '';
     uniqueErrors.forEach(name => {
-      errorSummary += `• ${name}\n`;
+      const count = errorCounts[name];
+      errorSummary += `• ${count > 1 ? count + '次' : ''}${name}\n`;
     });
 
     // 随机选择总结语
@@ -368,6 +377,12 @@ function endGame() {
     ];
     const randomPhrase = summaryPhrases[Math.floor(Math.random() * summaryPhrases.length)];
     errorSummary += `\n${randomPhrase}`;
+
+    // 只有在有点击过正面物品时才添加鼓励语
+    if (clickedPositives.length > 0) {
+      const randomPositiveItem = clickedPositives[Math.floor(Math.random() * clickedPositives.length)];
+      errorSummary += `不过能够${randomPositiveItem.name}，你也是有点绝活的！`;
+    }
   }
   
   // 分开显示模型描述和错误总结
@@ -377,6 +392,32 @@ function endGame() {
       <div class="result-score-label">最终得分</div>
       <div class="result-score-value">${finalScore}</div>
     </div>
+    ${(() => {
+      // 找到下一个模型
+      let nextModel = null;
+      let strongerModelsCount = 0;
+      for (let i = 0; i < modelRanks.length; i++) {
+        if (modelRanks[i].min > finalScore) {
+          if (!nextModel) {
+            nextModel = modelRanks[i];
+          }
+          strongerModelsCount++;
+        }
+      }
+      
+      // 如果找到了下一个模型，计算差值
+      if (nextModel) {
+        const scoreDiff = nextModel.min - finalScore;
+        return `<div class="result-score" style="margin-top: 8px;">
+          <div class="result-score-label" style="font-size: 16px;">距离下一级模型还差<span style="margin: 0 2px; vertical-align: -0.1em;">${scoreDiff}</span>分</div>
+          <div class="result-score-label" style="font-size: 16px; margin-top: 4px;">还有<span style="margin: 0 2px; vertical-align: -0.1em;">${strongerModelsCount}</span>个更强的模型等待炼出</div>
+        </div>`;
+      } else {
+        return `<div class="result-score" style="margin-top: 8px;">
+          <div class="result-score-label" style="font-size: 16px;">已经没有更强的模型了！</div>
+        </div>`;
+      }
+    })()}
     ${errorSummary ? `
       <div class="error-summary">
         <div class="error-title">大模型炼丹的路上，你经历了：</div>
@@ -497,30 +538,8 @@ function endGame() {
       promotionButton.onclick = () => {
         // 移除宣传语弹窗
         document.body.removeChild(promotionOverlay);
-        resetGame();
-        // 重新绑定点击事件
-        furnace.onclick = () => {
-          if (!isGameStarted) {
-            startGame();
-            return;
-          }
-          
-          if (isShaking) return;  // 如果正在震动，不响应点击
-          
-          const currentItem = getRandomItem();
-          if (currentItem.score < 0) {
-            // 点击了负面物品，触发震动
-            shakeFurnace();
-          } else {
-            // 点击了正面物品，正常处理
-            updateScore(currentItem.score);
-            // 清除当前定时器
-            clearInterval(itemInterval);
-            // 设置新的定时器
-            itemInterval = setInterval(showNextItem, config.contentSwitchInterval);
-            showNextItem();  // 点击后马上切换到下一条
-          }
-        };
+        // 刷新页面
+        window.location.reload();
       };
     } catch (error) {
       console.error('生成分享图片失败:', error);
@@ -555,33 +574,8 @@ function endGame() {
     promotionButton.onclick = () => {
       // 移除宣传语弹窗
       document.body.removeChild(promotionOverlay);
-      // 关闭结算界面
-      resultOverlay.classList.remove('show');
-      resultModel.classList.remove('model-reveal');
-      resetGame();
-      // 重新绑定点击事件
-      furnace.onclick = () => {
-        if (!isGameStarted) {
-          startGame();
-          return;
-        }
-        
-        if (isShaking) return;  // 如果正在震动，不响应点击
-        
-        const currentItem = getRandomItem();
-        if (currentItem.score < 0) {
-          // 点击了负面物品，触发震动
-          shakeFurnace();
-        } else {
-          // 点击了正面物品，正常处理
-          updateScore(currentItem.score);
-          // 清除当前定时器
-          clearInterval(itemInterval);
-          // 设置新的定时器
-          itemInterval = setInterval(showNextItem, config.contentSwitchInterval);
-          showNextItem();  // 点击后马上切换到下一条
-        }
-      };
+      // 刷新页面
+      window.location.reload();
     };
   };
   
@@ -615,6 +609,8 @@ furnace.onclick = () => {
   } else {
     // 点击了正面物品，正常处理
     updateScore(currentItem.score);
+    // 记录正面物品
+    clickedPositives.push({...currentItem});
     // 清除当前定时器
     clearInterval(itemInterval);
     // 设置新的定时器

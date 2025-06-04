@@ -29,7 +29,7 @@ export const negativeItems = [
   // 算力问题
   { name: "算力价格暴涨", emoji: "📈", score: -15 },
   { name: "显卡发烫冒烟", emoji: "💥", score: -20 },
-  { name: "机房突然断电", emoji: "⚡", score: -100 },
+  { name: "机房突然断电", emoji: "⚡", score: -20 },
   
   // 人才问题
   { name: "核心成员删库跑路", emoji: "💣", score: -100 },
@@ -43,5 +43,5 @@ export const negativeItems = [
   // 商业风险
   { name: "蒸馏GPT-4被举报", emoji: "📊", score: -15 },
   { name: "代码merge后炸了", emoji: "💥", score: -28 },
-  { name: "猫咪踩键盘删光数据", emoji: "", score: -100 }
+  { name: "猫咪踩键盘删光数据", emoji: "", score: -50 }
 ];

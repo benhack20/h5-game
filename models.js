@@ -1,9 +1,9 @@
 // 模型等级定义
 export const MODEL_RANKS = {
   BEGINNER: { name: "初级", min: 0, max: 50 },
-  INTERMEDIATE: { name: "中级", min: 50, max: 150 },
-  ADVANCED: { name: "高级", min: 150, max: 250 },
-  EXPERT: { name: "顶级", min: 250, max: Infinity }
+  INTERMEDIATE: { name: "中级", min: 50, max: 100 },
+  ADVANCED: { name: "高级", min: 100, max: 190 },
+  EXPERT: { name: "顶级", min: 190, max: Infinity }
 };
 
 export const modelRanks = [

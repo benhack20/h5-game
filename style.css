@@ -445,10 +445,11 @@ button:disabled {
 }
 
 .result-title {
-  color: #ff4444;
-  font-size: 18px;
-  margin-bottom: 15px;
-  text-shadow: 0 0 10px rgba(255, 68, 68, 0.5);
+  font-size: 20px;
+  color: #ffcc00;
+  margin-bottom: 20px;
+  text-align: center;
+  font-weight: bold;
 }
 
 .result-model {
@@ -471,7 +472,7 @@ button:disabled {
 .result-score-label {
   font-family: 'Press Start 2P', cursive;
   color: #ffffff;
-  font-size: 12px;
+  font-size: 16px;
   margin-bottom: 4px;
   opacity: 0.8;
 }
@@ -502,26 +503,27 @@ button:disabled {
 }
 
 .error-summary {
-  padding: 12px;
-  background: rgba(255, 68, 68, 0.1);
+  margin-top: 20px;
+  padding: 15px;
+  background: rgba(255, 0, 0, 0.1);
   border-radius: 8px;
-  border: 1px solid rgba(255, 68, 68, 0.2);
+  font-size: 15px;
+  line-height: 1.6;
   text-align: left;
-  white-space: pre-line;
-  font-size: 13px;
 }
 
 .error-title {
   color: #ff4444;
+  margin-bottom: 10px;
   font-weight: bold;
-  margin-bottom: 4px;
+  font-size: 16px;
   text-align: center;
-  font-size: 14px;
 }
 
 .error-list {
-  margin-top: 4px;
-  line-height: 1.5;
+  white-space: pre-line;
+  font-size: 14px;
+  text-align: left;
 }
 
 .error-list::after {
@@ -753,26 +755,27 @@ button:disabled {
 }
 
 .share-error-summary {
+  margin-top: 20px;
   padding: 15px;
-  background: rgba(255, 68, 68, 0.1);
+  background: rgba(255, 0, 0, 0.1);
   border-radius: 8px;
-  border: 1px solid rgba(255, 68, 68, 0.2);
+  font-size: 15px;
+  line-height: 1.6;
   text-align: left;
-  white-space: pre-line;
-  margin: 20px 0;
 }
 
 .share-error-title {
   color: #ff4444;
+  margin-bottom: 10px;
   font-weight: bold;
-  margin-bottom: 4px;
+  font-size: 16px;
   text-align: center;
-  font-size: 15px;
 }
 
 .share-error-list {
-  margin-top: 4px;
-  line-height: 1.6;
+  white-space: pre-line;
+  font-size: 14px;
+  text-align: left;
 }
 
 .share-footer {
