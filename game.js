@@ -402,30 +402,50 @@ function endGame() {
       // 关闭结算界面
       resultOverlay.classList.remove('show');
       resultModel.classList.remove('model-reveal');
-      resetGame();
       
-      // 重新绑定点击事件
-      furnace.onclick = () => {
-        if (!isGameStarted) {
-          startGame();
-          return;
-        }
-        
-        if (isShaking) return;  // 如果正在震动，不响应点击
-        
-        const currentItem = getRandomItem();
-        if (currentItem.score < 0) {
-          // 点击了负面物品，触发震动
-          shakeFurnace();
-        } else {
-          // 点击了正面物品，正常处理
-          updateScore(currentItem.score);
-          // 清除当前定时器
-          clearInterval(itemInterval);
-          // 设置新的定时器
-          itemInterval = setInterval(showNextItem, config.contentSwitchInterval);
-          showNextItem();  // 点击后马上切换到下一条
-        }
+      // 显示宣传语弹窗
+      const randomMessage = promotionMessages[Math.floor(Math.random() * promotionMessages.length)];
+      const promotionOverlay = document.createElement('div');
+      promotionOverlay.className = 'promotion-overlay';
+      promotionOverlay.innerHTML = `
+        <div class="promotion-content">
+          <div class="promotion-message">${randomMessage}</div>
+          <button class="promotion-button">OK</button>
+        </div>
+      `;
+      
+      // 添加弹窗到页面
+      document.body.appendChild(promotionOverlay);
+      
+      // 添加按钮点击事件
+      const promotionButton = promotionOverlay.querySelector('.promotion-button');
+      promotionButton.onclick = () => {
+        // 移除宣传语弹窗
+        document.body.removeChild(promotionOverlay);
+        resetGame();
+        // 重新绑定点击事件
+        furnace.onclick = () => {
+          if (!isGameStarted) {
+            startGame();
+            return;
+          }
+          
+          if (isShaking) return;  // 如果正在震动，不响应点击
+          
+          const currentItem = getRandomItem();
+          if (currentItem.score < 0) {
+            // 点击了负面物品，触发震动
+            shakeFurnace();
+          } else {
+            // 点击了正面物品，正常处理
+            updateScore(currentItem.score);
+            // 清除当前定时器
+            clearInterval(itemInterval);
+            // 设置新的定时器
+            itemInterval = setInterval(showNextItem, config.contentSwitchInterval);
+            showNextItem();  // 点击后马上切换到下一条
+          }
+        };
       };
     } catch (error) {
       console.error('生成分享图片失败:', error);
