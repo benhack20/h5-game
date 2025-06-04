@@ -2,6 +2,17 @@ import { positiveItems, negativeItems } from './items.js';
 import { modelRanks } from './models.js';
 import { config } from './config.js';
 
+// 宣传语数组
+const promotionMessages = [
+  "点击太累？来启迪之星，用真算力训练大模型！",
+  "炼丹炉太小？启迪之星算力平台，让你一次炼个够！",
+  "想炼出更好的模型？来启迪之星，算力管够！",
+  "别再点屏幕了，用真算力吧！启迪之星等你来！",
+  "炼丹路上踩坑无数？来启迪之星，算力无忧！",
+  "想炼出下一个GPT？启迪之星算力平台助你一臂之力！",
+  "炼丹太贵？来启迪之星，算力价格更实惠！"
+];
+
 let score = 0;
 let timeLeft = config.gameDuration;
 let gameInterval = null;      // 控制倒计时
@@ -428,31 +439,54 @@ function endGame() {
   
   // 添加重新开始按钮事件
   resultButton.onclick = () => {
-    resultOverlay.classList.remove('show');
-    resultModel.classList.remove('model-reveal');
-    resetGame();
-    // 重新绑定点击事件
-    furnace.onclick = () => {
-      if (!isGameStarted) {
-        startGame();
-        return;
-      }
-      
-      if (isShaking) return;  // 如果正在震动，不响应点击
-      
-      const currentItem = getRandomItem();
-      if (currentItem.score < 0) {
-        // 点击了负面物品，触发震动
-        shakeFurnace();
-      } else {
-        // 点击了正面物品，正常处理
-        updateScore(currentItem.score);
-        // 清除当前定时器
-        clearInterval(itemInterval);
-        // 设置新的定时器
-        itemInterval = setInterval(showNextItem, config.contentSwitchInterval);
-        showNextItem();  // 点击后马上切换到下一条
-      }
+    // 随机选择一条宣传语
+    const randomMessage = promotionMessages[Math.floor(Math.random() * promotionMessages.length)];
+    
+    // 创建宣传语弹窗
+    const promotionOverlay = document.createElement('div');
+    promotionOverlay.className = 'promotion-overlay';
+    promotionOverlay.innerHTML = `
+      <div class="promotion-content">
+        <div class="promotion-message">${randomMessage}</div>
+        <button class="promotion-button">OK</button>
+      </div>
+    `;
+    
+    // 添加弹窗到页面
+    document.body.appendChild(promotionOverlay);
+    
+    // 添加按钮点击事件
+    const promotionButton = promotionOverlay.querySelector('.promotion-button');
+    promotionButton.onclick = () => {
+      // 移除宣传语弹窗
+      document.body.removeChild(promotionOverlay);
+      // 关闭结算界面
+      resultOverlay.classList.remove('show');
+      resultModel.classList.remove('model-reveal');
+      resetGame();
+      // 重新绑定点击事件
+      furnace.onclick = () => {
+        if (!isGameStarted) {
+          startGame();
+          return;
+        }
+        
+        if (isShaking) return;  // 如果正在震动，不响应点击
+        
+        const currentItem = getRandomItem();
+        if (currentItem.score < 0) {
+          // 点击了负面物品，触发震动
+          shakeFurnace();
+        } else {
+          // 点击了正面物品，正常处理
+          updateScore(currentItem.score);
+          // 清除当前定时器
+          clearInterval(itemInterval);
+          // 设置新的定时器
+          itemInterval = setInterval(showNextItem, config.contentSwitchInterval);
+          showNextItem();  // 点击后马上切换到下一条
+        }
+      };
     };
   };
   
