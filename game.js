@@ -645,9 +645,43 @@ function showFingerPointer() {
   document.body.appendChild(fingerPointer);
 }
 
-// 在页面加载完成后显示手指提示
+// 在window.addEventListener('load', () => {之前添加以下代码
+function showTutorial() {
+  const tutorialOverlay = document.createElement('div');
+  tutorialOverlay.className = 'tutorial-overlay';
+  tutorialOverlay.innerHTML = `
+    <div class="tutorial-content">
+      <div class="tutorial-title">游戏玩法</div>
+      <div class="tutorial-text">
+        <p>✅ 掉落正面资源时点击炼丹炉</p>
+        <p>❌ 出现负面事件时不要点击！</p>
+        <p>随着分数积累，会不断炼出更高级的模型！</p>
+      </div>
+      <button class="tutorial-button">开始炼丹</button>
+    </div>
+  `;
+  
+  document.body.appendChild(tutorialOverlay);
+  
+  // 添加显示动画
+  setTimeout(() => {
+    tutorialOverlay.classList.add('show');
+  }, 100);
+  
+  // 添加按钮点击事件
+  const tutorialButton = tutorialOverlay.querySelector('.tutorial-button');
+  tutorialButton.onclick = () => {
+    tutorialOverlay.classList.remove('show');
+    setTimeout(() => {
+      document.body.removeChild(tutorialOverlay);
+      showFingerPointer();
+    }, 300);
+  };
+}
+
+// 修改window.addEventListener('load', () => {部分
 window.addEventListener('load', () => {
-  showFingerPointer();
+  showTutorial();
 });
 
 // 在窗口大小改变时更新手指提示位置
