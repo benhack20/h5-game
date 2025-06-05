@@ -653,9 +653,9 @@ function showTutorial() {
     <div class="tutorial-content">
       <div class="tutorial-title">游戏玩法</div>
       <div class="tutorial-text">
-        <p>✅ 掉落正面资源时点击炼丹炉</p>
-        <p>❌ 出现负面事件时不要点击！</p>
-        <p>随着分数积累，会不断炼出更高级的模型！</p>
+        <p>✅ 掉落有利资源时，点击炼丹炉加分</p>
+        <p>❌ 出现负面事件时，不要点击炼丹炉！</p>
+        <p>随着分数积累，会不断炼出更加高级的模型！</p>
       </div>
       <button class="tutorial-button">开始炼丹</button>
     </div>
