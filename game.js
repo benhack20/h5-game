@@ -538,8 +538,8 @@ function endGame() {
       promotionButton.onclick = () => {
         // 移除宣传语弹窗
         document.body.removeChild(promotionOverlay);
-        // 刷新页面
-        window.location.reload();
+        // 重置游戏状态
+        resetGame();
       };
     } catch (error) {
       console.error('生成分享图片失败:', error);
@@ -574,8 +574,11 @@ function endGame() {
     promotionButton.onclick = () => {
       // 移除宣传语弹窗
       document.body.removeChild(promotionOverlay);
-      // 刷新页面
-      window.location.reload();
+      // 关闭结算界面
+      resultOverlay.classList.remove('show');
+      resultModel.classList.remove('model-reveal');
+      // 重置游戏状态
+      resetGame();
     };
   };
   
