@@ -526,6 +526,10 @@ function endGame() {
       promotionOverlay.innerHTML = `
         <div class="promotion-content">
           <div class="promotion-message">${randomMessage}</div>
+          <div class="share-qrcode" style="margin: 20px auto;">
+            <img src="wechat-qrcode.png" alt="了解更多" />
+            <p>了解更多</p>
+          </div>
           <button class="promotion-button">OK</button>
         </div>
       `;
@@ -562,6 +566,10 @@ function endGame() {
     promotionOverlay.innerHTML = `
       <div class="promotion-content">
         <div class="promotion-message">${randomMessage}</div>
+        <div class="share-qrcode" style="margin: 20px auto;">
+          <img src="wechat-qrcode.png" alt="了解更多" />
+          <p>了解更多</p>
+        </div>
         <button class="promotion-button">OK</button>
       </div>
     `;
