@@ -1110,22 +1110,18 @@ button:disabled {
   max-width: 90%;
   max-height: 90vh;
   overflow: auto;
-  display: flex;
-  flex-direction: column;
-}
-
-.share-tip {
-  color: white;
-  margin-bottom: 15px;
-  font-size: 16px;
-  order: 1;
 }
 
 .share-image-container img {
   max-width: 100%;
   height: auto;
   border-radius: 8px;
-  order: 2;
+}
+
+.share-tip {
+  color: white;
+  margin: 15px 0;
+  font-size: 16px;
 }
 
 .share-close {
@@ -1138,7 +1134,6 @@ button:disabled {
   cursor: pointer;
   margin-top: 10px;
   font-family: 'Press Start 2P', cursive;
-  order: 3;
 }
 
 .share-close:hover {

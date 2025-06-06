@@ -557,9 +557,9 @@ function endGame() {
         shareOverlay.className = 'share-overlay';
         shareOverlay.innerHTML = `
           <div class="share-image-container">
-            <img src="${image}" alt="炼丹战绩" />
             <div class="share-tip">长按图片保存</div>
-            <button class="share-close">关闭</button>
+            <img src="${image}" alt="炼丹战绩" />
+            <button class="share-close">返回</button>
           </div>
         `;
         document.body.appendChild(shareOverlay);
