@@ -473,7 +473,7 @@ function endGame() {
           <div class="share-footer">
             <div class="share-tagline">你能炼出什么模型？</div>
             <div class="share-qrcode">
-              <img src="qrcode.png" alt="扫码体验" />
+              <img src="wechat-qrcode.png" alt="扫码体验" />
               <p>扫码来挑战</p>
             </div>
           </div>
