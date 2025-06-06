@@ -1,10 +1,10 @@
 // 游戏配置
 export const config = {
   // 内容切换时间间隔（毫秒）
-  contentSwitchInterval: 680,
+  contentSwitchInterval: 670,
   
   // 炼丹炉呼吸动画时间间隔（秒）
-  furnacePulseInterval: 0.68,
+  furnacePulseInterval: 0.67,
   
   // 游戏倒计时（秒）
   gameDuration: 20,
