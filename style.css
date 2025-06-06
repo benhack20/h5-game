@@ -537,48 +537,24 @@ button:disabled {
 
 .result-buttons {
   display: flex;
-  gap: 8px;
   justify-content: center;
-  margin-top: 15px;
+  align-items: center;
+  gap: 12px;
+  margin-top: 20px;
 }
 
 .result-button {
   background: #ff4444;
-  color: white;
   border: none;
-  padding: 10px 20px;
+  border-radius: 6px;
+  color: white;
   font-family: 'Press Start 2P', cursive;
-  font-size: 12px;
-  border-radius: 8px;
+  font-size: 14px;
+  padding: 10px 20px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: transform 0.2s ease;
+  min-width: 80px;
   box-shadow: 0 4px 15px rgba(255, 68, 68, 0.3);
-  text-shadow: none;
-  flex: 1;
-  max-width: 180px;
-}
-
-.share-button {
-  background: #4CAF50;
-  box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
-}
-
-.share-button:hover {
-  background: #45a049;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
-}
-
-.share-button.loading {
-  background: #4CAF50 !important;
-  transform: none !important;
-  box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3) !important;
-}
-
-.share-button.loading:hover {
-  background: #4CAF50 !important;
-  transform: none !important;
-  box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3) !important;
 }
 
 .result-button:hover {
@@ -592,22 +568,73 @@ button:disabled {
   box-shadow: 0 2px 10px rgba(255, 68, 68, 0.3);
 }
 
-@keyframes modelReveal {
-  0% {
-    transform: scale(0.5);
-    opacity: 0;
+.learn-more-button {
+  background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+  color: white;
+  animation: buttonPulse 1.2s infinite;
+  box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+}
+
+.learn-more-button:hover {
+  background: linear-gradient(135deg, #45a049 0%, #3d8b40 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(76, 175, 80, 0.6);
+}
+
+.learn-more-button:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 10px rgba(76, 175, 80, 0.4);
+}
+
+.share-icon-button {
+  background: none;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: rgba(255, 255, 255, 0.8);
+  padding: 8px;
+}
+
+.share-icon-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: scale(1.1);
+  color: rgba(255, 255, 255, 1);
+}
+
+.share-icon-button:active {
+  transform: scale(0.95);
+}
+
+.share-icon-button.loading {
+  animation: spin 1s linear infinite;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
   }
-  50% {
-    transform: scale(1.1);
-  }
-  100% {
-    transform: scale(1);
-    opacity: 1;
+  to {
+    transform: rotate(360deg);
   }
 }
 
-.model-reveal {
-  animation: modelReveal 0.5s ease-out forwards;
+@keyframes buttonPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(76, 175, 80, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(76, 175, 80, 0);
+  }
 }
 
 .share-container {
@@ -1165,4 +1192,119 @@ button:disabled {
     transform: scale(1);
     opacity: 1;
   }
+}
+
+/* 进度条样式 */
+.progress-container {
+  width: 100%;
+  height: 12px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 6px;
+  margin: 8px 0 40px 0;
+  position: relative;
+  overflow: visible;
+  border: 1px solid rgba(255, 204, 0, 0.2);
+}
+
+.progress-bar {
+  height: 100%;
+  position: relative;
+  display: flex;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.progress-segment {
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+.progress-segment:first-child {
+  border-top-left-radius: 6px;
+  border-bottom-left-radius: 6px;
+}
+
+.progress-segment:last-child {
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+
+.progress-segment.beginner {
+  background: linear-gradient(90deg, #4a90e2, #5ca9fb);
+}
+
+.progress-segment.intermediate {
+  background: linear-gradient(90deg, #5ca9fb, #7ed321);
+}
+
+.progress-segment.advanced {
+  background: linear-gradient(90deg, #7ed321, #f5a623);
+}
+
+.progress-segment.expert {
+  background: linear-gradient(90deg, #f5a623, #ff4444);
+}
+
+.progress-segment.ultimate {
+  background: linear-gradient(90deg, #ff4444, #ffcc00);
+}
+
+.flame-marker {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  top: 40%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  opacity: 0;
+  animation: flameAppear 0.5s ease-out forwards;
+}
+
+.flame-marker::before {
+  content: '🔥';
+  font-size: 20px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: flameFloat 1s ease-in-out infinite alternate;
+}
+
+@keyframes flameAppear {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.5);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes flameFloat {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+}
+
+.progress-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 4px;
+  padding: 0 6px;
+}
+
+.progress-label {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.6);
+  text-align: center;
+  flex: 1;
+}
+
+.progress-label.active {
+  color: #ffcc00;
+  font-weight: bold;
 }

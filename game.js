@@ -5,12 +5,8 @@ import { WECHAT_URL } from './wechat-url.js';
 
 // 宣传语数组
 const promotionMessages = [
-  "点击太累？来启迪之星，用真算力训练大模型！",
-  "炼丹炉太小？启迪之星算力平台，让你一次炼个够！",
   "想炼出更好的模型？来启迪之星，算力管够！",
-  "别再点屏幕了，用真算力吧！启迪之星等你来！",
-  "炼丹路上踩坑无数？来启迪之星，算力无忧！",
-  "想炼出下一个GPT？启迪之星算力平台助你一臂之力！",
+  "别点屏幕了，用真算力吧！启迪之星等你来！",
   "炼丹太贵？来启迪之星，算力价格更实惠！"
 ];
 
@@ -406,18 +402,28 @@ function endGame() {
         }
       }
       
-      // 如果找到了下一个模型，计算差值
-      if (nextModel) {
-        const scoreDiff = modelRanks[modelRanks.length - 1].min - finalScore;
-        return `<div class="result-score" style="margin-top: 8px;">
-          <div class="result-score-label" style="font-size: 16px;">距离终极模型还差<span style="margin: 0 2px; vertical-align: -0.1em;">${scoreDiff}</span>分</div>
-          <div class="result-score-label" style="font-size: 16px; margin-top: 4px;">前方还有<span style="margin: 0 2px; vertical-align: -0.1em;">${strongerModelsCount}</span>个模型等待炼出</div>
-        </div>`;
-      } else {
-        return `<div class="result-score" style="margin-top: 8px;">
-          <div class="result-score-label" style="font-size: 16px;">已经没有更强的模型了！</div>
-        </div>`;
-      }
+      // 计算进度条各段宽度
+      const totalRange = modelRanks[modelRanks.length - 1].min;
+      const currentProgress = (finalScore / totalRange) * 100;
+      
+      // 生成进度条HTML
+      return `
+        <div class="progress-container">
+          <div class="progress-bar">
+            <div class="progress-segment beginner" style="width: ${Math.min(100, (MODEL_RANKS.INTERMEDIATE.min / totalRange) * 100)}%"></div>
+            <div class="progress-segment intermediate" style="width: ${Math.min(100, ((MODEL_RANKS.ADVANCED.min - MODEL_RANKS.INTERMEDIATE.min) / totalRange) * 100)}%"></div>
+            <div class="progress-segment advanced" style="width: ${Math.min(100, ((MODEL_RANKS.EXPERT.min - MODEL_RANKS.ADVANCED.min) / totalRange) * 100)}%"></div>
+            <div class="progress-segment expert" style="width: ${Math.min(100, ((totalRange - MODEL_RANKS.EXPERT.min) / totalRange) * 100)}%"></div>
+          </div>
+          <div class="flame-marker" style="left: 0%"></div>
+          <div class="progress-labels">
+            <div class="progress-label ${finalScore >= MODEL_RANKS.BEGINNER.min ? 'active' : ''}">菜鸟</div>
+            <div class="progress-label ${finalScore >= MODEL_RANKS.INTERMEDIATE.min ? 'active' : ''}">学徒</div>
+            <div class="progress-label ${finalScore >= MODEL_RANKS.ADVANCED.min ? 'active' : ''}">大师</div>
+            <div class="progress-label ${finalScore >= MODEL_RANKS.EXPERT.min ? 'active' : ''}">宗师</div>
+          </div>
+        </div>
+      `;
     })()}
     ${errorSummary ? `
       <div class="error-summary">
@@ -427,7 +433,6 @@ function endGame() {
     ` : ''}
     <div class="promotion-section" style="margin-top: 24px; margin-bottom: 16px;">
       <div class="promotion-message" style="font-size: 14px; margin-bottom: 12px;">${promotionMessages[Math.floor(Math.random() * promotionMessages.length)]}</div>
-      <button onclick="window.open('${WECHAT_URL}', '_blank')" style="display: block; margin: 0 auto; padding: 8px 16px; background: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; animation: buttonPulse 1.5s infinite; box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);">前往了解</button>
     </div>
   `;
   
@@ -435,13 +440,37 @@ function endGame() {
   resultOverlay.classList.add('show');
   resultModel.classList.add('model-reveal');
   
+  // 等待DOM更新后移动火苗
+  setTimeout(() => {
+    const flameMarker = document.querySelector('.flame-marker');
+    if (flameMarker) {
+      const totalRange = modelRanks[modelRanks.length - 1].min;
+      const currentProgress = (finalScore / totalRange) * 100;
+      flameMarker.style.transition = 'left 1s cubic-bezier(0.4, 0, 0.2, 1)';
+      flameMarker.style.left = `${currentProgress}%`;
+    }
+  }, 100);
+  
+  // 修改按钮布局
+  const resultButtons = document.querySelector('.result-buttons');
+  resultButtons.innerHTML = `
+    <button class="result-button">回炉重炼</button>
+    <button class="result-button learn-more-button" onclick="window.open('${WECHAT_URL}', '_blank')">前往了解</button>
+    <button class="share-icon-button" title="分享战绩">
+      <svg viewBox="0 0 24 24" width="24" height="24">
+        <path fill="currentColor" d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/>
+      </svg>
+    </button>
+  `;
+
   // 添加分享按钮事件
-  shareButton.onclick = async () => {
+  const shareIconButton = document.querySelector('.share-icon-button');
+  shareIconButton.onclick = async () => {
     try {
       // 添加加载动画
-      shareButton.classList.add('loading');
-      const originalText = shareButton.innerHTML;
-      shareButton.innerHTML = '<span>分享战绩</span>';
+      shareIconButton.classList.add('loading');
+      const originalHTML = shareIconButton.innerHTML;
+      shareIconButton.innerHTML = '<span>分享中...</span>';
 
       // 创建一个临时容器用于截图
       const shareContainer = document.createElement('div');
@@ -524,81 +553,21 @@ function endGame() {
       resultOverlay.classList.remove('show');
       resultModel.classList.remove('model-reveal');
       
-      // 显示宣传语弹窗
-      /*
-      const randomMessage = promotionMessages[Math.floor(Math.random() * promotionMessages.length)];
-      const promotionOverlay = document.createElement('div');
-      promotionOverlay.className = 'promotion-overlay';
-      promotionOverlay.innerHTML = `
-        <div class="promotion-content">
-          <div class="promotion-message">${randomMessage}</div>
-          <div class="share-qrcode" style="margin: 20px auto;">
-            <img src="wechat-qrcode.png" alt="了解更多" />
-            <p>了解更多</p>
-          </div>
-          <button class="promotion-button">OK</button>
-        </div>
-      `;
-      
-      // 添加弹窗到页面
-      document.body.appendChild(promotionOverlay);
-      
-      // 添加按钮点击事件
-      const promotionButton = promotionOverlay.querySelector('.promotion-button');
-      promotionButton.onclick = () => {
-        // 移除宣传语弹窗
-        document.body.removeChild(promotionOverlay);
-        // 重置游戏状态
-        resetGame();
-      };
-      */
-      // 直接重置游戏状态
+      // 重置游戏状态
       resetGame();
     } catch (error) {
       console.error('生成分享图片失败:', error);
       alert('生成分享图片失败，请重试');
     } finally {
       // 移除加载动画
-      shareButton.classList.remove('loading');
-      shareButton.innerHTML = originalText;
+      shareIconButton.classList.remove('loading');
+      shareIconButton.innerHTML = originalHTML;
     }
   };
   
   // 添加重新开始按钮事件
-  resultButton.onclick = () => {
-    // 随机选择一条宣传语
-    /*
-    const randomMessage = promotionMessages[Math.floor(Math.random() * promotionMessages.length)];
-    
-    // 创建宣传语弹窗
-    const promotionOverlay = document.createElement('div');
-    promotionOverlay.className = 'promotion-overlay';
-    promotionOverlay.innerHTML = `
-      <div class="promotion-content">
-        <div class="promotion-message">${randomMessage}</div>
-        <div class="share-qrcode" style="margin: 20px auto;">
-          <img src="wechat-qrcode.png" alt="了解更多" />
-          <p>了解更多</p>
-        </div>
-        <button class="promotion-button">OK</button>
-      </div>
-    `;
-    
-    // 添加弹窗到页面
-    document.body.appendChild(promotionOverlay);
-    
-    // 添加按钮点击事件
-    const promotionButton = promotionOverlay.querySelector('.promotion-button');
-    promotionButton.onclick = () => {
-      // 移除宣传语弹窗
-      document.body.removeChild(promotionOverlay);
-      // 关闭结算界面
-      resultOverlay.classList.remove('show');
-      resultModel.classList.remove('model-reveal');
-      // 重置游戏状态
-      resetGame();
-    };
-    */
+  const restartButton = document.querySelector('.result-button:not(.learn-more-button)');
+  restartButton.onclick = () => {
     // 直接关闭结算界面并重置游戏状态
     resultOverlay.classList.remove('show');
     resultModel.classList.remove('model-reveal');
