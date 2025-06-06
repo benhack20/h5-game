@@ -601,8 +601,14 @@ button:disabled {
   cursor: pointer;
   transition: all 0.2s ease;
   color: rgba(255, 255, 255, 0.8);
-  padding: 8px;
+  padding: 0;
   position: relative;
+  box-sizing: border-box;
+}
+
+.share-icon-button svg {
+  width: 24px;
+  height: 24px;
 }
 
 .share-icon-button:hover {
@@ -617,6 +623,7 @@ button:disabled {
 
 .share-icon-button.loading {
   color: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .share-icon-button.loading::after {
@@ -624,13 +631,14 @@ button:disabled {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 20px;
-  height: 20px;
-  margin: -10px 0 0 -10px;
+  width: 24px;
+  height: 24px;
+  margin: -12px 0 0 -12px;
   border: 2px solid rgba(255, 255, 255, 0.3);
   border-top-color: #fff;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
+  box-sizing: border-box;
 }
 
 .share-icon-button.loading span {
@@ -672,7 +680,7 @@ button:disabled {
 .share-content .result-title {
   font-size: 20px;
   color: #ffcc00;
-  margin-bottom: 20px;
+  margin: 45px 0 20px;
   text-align: center;
   font-weight: bold;
 }
@@ -929,7 +937,7 @@ button:disabled {
 }
 
 .share-header {
-  margin-bottom: 20px;
+  margin: 30px 0 20px;
 }
 
 .share-content h2 {
