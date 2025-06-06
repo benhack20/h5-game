@@ -20,7 +20,6 @@ export const positiveItems = [
   { name: "挖到OpenAI研究员", emoji: "👨‍🔬", score: 15 },
   { name: "天才实习生贡献代码", emoji: "🚄", score: 4 },
   { name: "招到AI大厂工程师", emoji: "👨‍💻", score: 8 },
-  { name: "实习生写代码太棒", emoji: "🌟", score: 8 },
   { name: "招到算法专家", emoji: "🧮", score: 8 },
   
   // 技术突破
