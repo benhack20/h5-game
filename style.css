@@ -1136,7 +1136,7 @@ button:disabled {
   font-size: 16px;
   border-radius: 8px;
   cursor: pointer;
-  margin-top: 15px;
+  margin-top: 10px;
   font-family: 'Press Start 2P', cursive;
   order: 3;
 }
