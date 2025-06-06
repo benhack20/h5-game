@@ -1,6 +1,7 @@
 import { positiveItems, negativeItems } from './items.js';
 import { modelRanks, MODEL_RANKS } from './models.js';
 import { config } from './config.js';
+import { WECHAT_URL } from './wechat-url.js';
 
 // 宣传语数组
 const promotionMessages = [
@@ -424,12 +425,9 @@ function endGame() {
         <div class="error-list">${errorSummary}</div>
       </div>
     ` : ''}
-    <div class="promotion-section" style="margin-top: 24px; margin-bottom: 32px;">
+    <div class="promotion-section" style="margin-top: 24px; margin-bottom: 16px;">
       <div class="promotion-message" style="font-size: 14px; margin-bottom: 12px;">${promotionMessages[Math.floor(Math.random() * promotionMessages.length)]}</div>
-      <div class="share-qrcode" style="margin: 0 auto; width: 120px;">
-        <img src="wechat-qrcode.png" alt="了解更多" style="width: 100%; height: auto;" />
-        <p>了解更多</p>
-      </div>
+      <button onclick="window.open('${WECHAT_URL}', '_blank')" style="display: block; margin: 0 auto; padding: 8px 16px; background: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; animation: buttonPulse 1.5s infinite; box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);">前往了解</button>
     </div>
   `;
   
@@ -715,3 +713,23 @@ window.addEventListener('resize', () => {
     showFingerPointer();
   }
 });
+
+// 在文件末尾添加新的动画样式
+const style = document.createElement('style');
+style.textContent = `
+  @keyframes buttonPulse {
+    0% {
+      transform: scale(1);
+      box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+    }
+    50% {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px rgba(76, 175, 80, 0.8);
+    }
+    100% {
+      transform: scale(1);
+      box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+    }
+  }
+`;
+document.head.appendChild(style);
