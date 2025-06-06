@@ -461,11 +461,11 @@ button:disabled {
   background: rgba(0, 0, 0, 0.3);
   border-radius: 10px;
   border: 2px solid rgba(255, 204, 0, 0.3);
-  text-shadow: 0 0 10px rgba(255, 204, 0, 0.3);
+  text-shadow: 0 0 5px rgba(255, 204, 0, 0.2);
   animation: glow 2s ease-in-out infinite alternate;
-  box-shadow: 0 0 10px rgba(255, 204, 0, 0.3),
-              0 0 20px rgba(255, 204, 0, 0.2),
-              0 0 30px rgba(255, 204, 0, 0.1);
+  box-shadow: 0 0 5px rgba(255, 204, 0, 0.2),
+              0 0 10px rgba(255, 204, 0, 0.1),
+              0 0 15px rgba(255, 204, 0, 0.05);
 }
 
 .result-score {
@@ -602,6 +602,7 @@ button:disabled {
   transition: all 0.2s ease;
   color: rgba(255, 255, 255, 0.8);
   padding: 8px;
+  position: relative;
 }
 
 .share-icon-button:hover {
@@ -615,8 +616,25 @@ button:disabled {
 }
 
 .share-icon-button.loading {
-  animation: spin 1s linear infinite;
   color: rgba(255, 255, 255, 0.5);
+}
+
+.share-icon-button.loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.share-icon-button.loading span {
+  visibility: hidden;
 }
 
 @keyframes spin {
@@ -625,18 +643,6 @@ button:disabled {
   }
   to {
     transform: rotate(360deg);
-  }
-}
-
-@keyframes buttonPulse {
-  0% {
-    box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.4);
-  }
-  70% {
-    box-shadow: 0 0 0 10px rgba(76, 175, 80, 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(76, 175, 80, 0);
   }
 }
 
@@ -1073,13 +1079,13 @@ button:disabled {
 @keyframes glow {
   from {
     box-shadow: 0 0 5px rgba(255, 204, 0, 0.2),
-                0 0 10px rgba(255, 204, 0, 0.2),
-                0 0 15px rgba(255, 204, 0, 0.2);
+                0 0 10px rgba(255, 204, 0, 0.1),
+                0 0 15px rgba(255, 204, 0, 0.05);
   }
   to {
-    box-shadow: 0 0 10px rgba(255, 204, 0, 0.3),
-                0 0 20px rgba(255, 204, 0, 0.3),
-                0 0 30px rgba(255, 204, 0, 0.3);
+    box-shadow: 0 0 8px rgba(255, 204, 0, 0.3),
+                0 0 12px rgba(255, 204, 0, 0.2),
+                0 0 16px rgba(255, 204, 0, 0.1);
   }
 }
 
@@ -1104,18 +1110,22 @@ button:disabled {
   max-width: 90%;
   max-height: 90vh;
   overflow: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.share-tip {
+  color: white;
+  margin-bottom: 15px;
+  font-size: 16px;
+  order: 1;
 }
 
 .share-image-container img {
   max-width: 100%;
   height: auto;
   border-radius: 8px;
-}
-
-.share-tip {
-  color: white;
-  margin: 15px 0;
-  font-size: 16px;
+  order: 2;
 }
 
 .share-close {
@@ -1126,8 +1136,9 @@ button:disabled {
   font-size: 16px;
   border-radius: 8px;
   cursor: pointer;
-  margin-top: 10px;
+  margin-top: 15px;
   font-family: 'Press Start 2P', cursive;
+  order: 3;
 }
 
 .share-close:hover {
