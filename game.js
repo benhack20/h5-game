@@ -347,7 +347,7 @@ function endGame() {
   
   // 修改结算标题
   const resultTitle = document.querySelector('.result-title');
-  resultTitle.textContent = `你炼出了${modelRank}模型：`;
+  resultTitle.textContent = `你炼出了模型：`;
   
   // 生成错误总结
   let errorSummary = '';
@@ -409,8 +409,8 @@ function endGame() {
       if (nextModel) {
         const scoreDiff = nextModel.min - finalScore;
         return `<div class="result-score" style="margin-top: 8px;">
-          <div class="result-score-label" style="font-size: 16px;">距离下一级模型还差<span style="margin: 0 2px; vertical-align: -0.1em;">${scoreDiff}</span>分</div>
-          <div class="result-score-label" style="font-size: 16px; margin-top: 4px;">还有<span style="margin: 0 2px; vertical-align: -0.1em;">${strongerModelsCount}</span>个更强的模型等待炼出</div>
+          <div class="result-score-label" style="font-size: 16px;">距离下一个模型还差<span style="margin: 0 2px; vertical-align: -0.1em;">${scoreDiff}</span>分</div>
+          <div class="result-score-label" style="font-size: 16px; margin-top: 4px;">前方还有<span style="margin: 0 2px; vertical-align: -0.1em;">${strongerModelsCount}</span>个模型等待炼出</div>
         </div>`;
       } else {
         return `<div class="result-score" style="margin-top: 8px;">
@@ -424,6 +424,13 @@ function endGame() {
         <div class="error-list">${errorSummary}</div>
       </div>
     ` : ''}
+    <div class="promotion-section" style="margin-top: 24px;">
+      <div class="promotion-message" style="font-size: 14px; margin-bottom: 12px;">${promotionMessages[Math.floor(Math.random() * promotionMessages.length)]}</div>
+      <div class="share-qrcode" style="margin: 0 auto; width: 120px;">
+        <img src="wechat-qrcode.png" alt="了解更多" style="width: 100%; height: auto;" />
+        <p>了解更多</p>
+      </div>
+    </div>
   `;
   
   // 显示结算界面
@@ -449,7 +456,7 @@ function endGame() {
           </div>
           <div class="share-header">
             <h2><span class="fire-emoji">🔥</span>启迪之星<br>大模型炼丹场</h2>
-            <div class="share-subtitle">我在<span class="time-number">${config.gameDuration}</span>秒内炼出了${modelRank}模型</div>
+            <div class="share-subtitle">我在<span class="time-number">${config.gameDuration}</span>秒内炼出了模型：</div>
           </div>
           <div class="share-model">${model.name}</div>
           <div class="share-message">${model.description}</div>
@@ -520,6 +527,7 @@ function endGame() {
       resultModel.classList.remove('model-reveal');
       
       // 显示宣传语弹窗
+      /*
       const randomMessage = promotionMessages[Math.floor(Math.random() * promotionMessages.length)];
       const promotionOverlay = document.createElement('div');
       promotionOverlay.className = 'promotion-overlay';
@@ -545,6 +553,9 @@ function endGame() {
         // 重置游戏状态
         resetGame();
       };
+      */
+      // 直接重置游戏状态
+      resetGame();
     } catch (error) {
       console.error('生成分享图片失败:', error);
       alert('生成分享图片失败，请重试');
@@ -558,6 +569,7 @@ function endGame() {
   // 添加重新开始按钮事件
   resultButton.onclick = () => {
     // 随机选择一条宣传语
+    /*
     const randomMessage = promotionMessages[Math.floor(Math.random() * promotionMessages.length)];
     
     // 创建宣传语弹窗
@@ -588,6 +600,11 @@ function endGame() {
       // 重置游戏状态
       resetGame();
     };
+    */
+    // 直接关闭结算界面并重置游戏状态
+    resultOverlay.classList.remove('show');
+    resultModel.classList.remove('model-reveal');
+    resetGame();
   };
   
   timerDisplay.textContent = `0s`;
@@ -663,7 +680,7 @@ function showTutorial() {
       <div class="tutorial-text">
         <p>✅ 掉落有利资源时，点击炼丹炉加分</p>
         <p>❌ 出现负面事件时，不要点击炼丹炉！</p>
-        <p>随着分数积累，会不断炼出更加高级的模型！</p>
+        <p>随着分数积累，会不断炼出新的模型！</p>
       </div>
       <button class="tutorial-button">开始炼丹</button>
     </div>
