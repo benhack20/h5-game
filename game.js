@@ -359,10 +359,20 @@ function endGame() {
     const uniqueErrors = [...new Set(clickedErrors.map(item => item.name))];
     
     errorSummary = '';
-    uniqueErrors.forEach(name => {
+    // 如果错误超过3条，随机选择3条
+    const displayErrors = uniqueErrors.length > 3 
+      ? uniqueErrors.sort(() => Math.random() - 0.5).slice(0, 3)
+      : uniqueErrors;
+    
+    displayErrors.forEach(name => {
       const count = errorCounts[name];
       errorSummary += `• ${count > 1 ? count + '次' : ''}${name}\n`;
     });
+
+    // 如果错误超过3条，添加省略号
+    if (uniqueErrors.length > 3) {
+      errorSummary += '• ......\n';
+    }
 
     // 随机选择总结语
     const summaryPhrases = [
