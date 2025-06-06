@@ -463,6 +463,9 @@ button:disabled {
   border: 2px solid rgba(255, 204, 0, 0.3);
   text-shadow: 0 0 10px rgba(255, 204, 0, 0.3);
   animation: glow 2s ease-in-out infinite alternate;
+  box-shadow: 0 0 10px rgba(255, 204, 0, 0.3),
+              0 0 20px rgba(255, 204, 0, 0.2),
+              0 0 30px rgba(255, 204, 0, 0.1);
 }
 
 .result-score {
@@ -641,22 +644,247 @@ button:disabled {
   position: fixed;
   top: -9999px;
   left: -9999px;
-  width: 600px;
-  padding: 40px;
-  background: #2d2d2d;
+  width: 95%;
+  max-width: 350px;
+  padding: 20px;
+  background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
   border-radius: 20px;
-  box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
-  border: 4px solid rgba(255, 204, 0, 0.5);
+  box-shadow: 0 0 30px rgba(255, 68, 68, 0.2);
+  border: 2px solid rgba(255, 68, 68, 0.3);
   box-sizing: border-box;
 }
 
 .share-content {
   text-align: center;
   color: white;
-  background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
-  padding: 30px;
-  border-radius: 12px;
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  border: none;
+}
+
+.share-content .result-title {
+  font-size: 20px;
+  color: #ffcc00;
+  margin-bottom: 20px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.share-content .result-model {
+  font-family: 'Press Start 2P', cursive;
+  color: #ffcc00;
+  font-size: 18px;
+  margin: 10px 0;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  border: 2px solid rgba(255, 204, 0, 0.3);
+  text-shadow: 0 0 10px rgba(255, 204, 0, 0.3);
+  animation: glow 2s ease-in-out infinite alternate;
+  box-shadow: 0 0 10px rgba(255, 204, 0, 0.3),
+              0 0 20px rgba(255, 204, 0, 0.2),
+              0 0 30px rgba(255, 204, 0, 0.1);
+}
+
+.share-content .result-message {
+  color: #ffffff;
+  font-size: 14px;
+  margin: 15px 0;
+  line-height: 1.5;
+  padding: 0 8px;
+}
+
+.share-content .model-description {
+  margin-bottom: 15px;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
   border: 1px solid rgba(255, 204, 0, 0.2);
+  text-align: left;
+  font-size: 13px;
+}
+
+.share-content .result-score {
+  margin: 12px 0;
+}
+
+.share-content .result-score-label {
+  font-family: 'Press Start 2P', cursive;
+  color: #ffffff;
+  font-size: 16px;
+  margin-bottom: 4px;
+  opacity: 0.8;
+}
+
+.share-content .result-score-value {
+  font-family: 'Press Start 2P', cursive;
+  color: #4CAF50;
+  font-size: 24px;
+  text-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+}
+
+.share-content .error-summary {
+  margin-top: 20px;
+  padding: 15px;
+  background: rgba(255, 0, 0, 0.1);
+  border-radius: 8px;
+  font-size: 15px;
+  line-height: 1.6;
+  text-align: left;
+}
+
+.share-content .error-title {
+  color: #ff4444;
+  margin-bottom: 10px;
+  font-weight: bold;
+  font-size: 16px;
+  text-align: center;
+}
+
+.share-content .error-list {
+  white-space: pre-line;
+  font-size: 14px;
+  text-align: left;
+}
+
+.share-content .promotion-section {
+  margin-top: 24px;
+  margin-bottom: 16px;
+}
+
+.share-content .promotion-message {
+  font-size: 14px;
+  margin-bottom: 12px;
+  color: #ffffff;
+  line-height: 1.5;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0 8px;
+}
+
+.share-content .share-qrcode {
+  margin: 15px auto;
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  display: inline-block;
+  text-align: center;
+}
+
+.share-content .share-qrcode img {
+  width: 100px;
+  height: 100px;
+  margin-bottom: 4px;
+  border-radius: 8px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.share-content .share-qrcode p {
+  font-family: 'Press Start 2P', cursive;
+  color: #ffffff;
+  font-size: 12px;
+  margin: 0;
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+}
+
+/* 进度条样式 */
+.progress-container {
+  width: 100%;
+  height: 12px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 6px;
+  margin: 8px 0 40px 0;
+  position: relative;
+  overflow: visible;
+  border: 1px solid rgba(255, 204, 0, 0.2);
+}
+
+.progress-bar {
+  height: 100%;
+  position: relative;
+  display: flex;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.progress-segment {
+  height: 100%;
+  transition: width 0.3s ease;
+  position: relative;
+}
+
+.progress-segment:not(:last-child)::after {
+  display: none;
+}
+
+.progress-segment:first-child {
+  border-top-left-radius: 6px;
+  border-bottom-left-radius: 6px;
+}
+
+.progress-segment:last-child {
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+
+.progress-segment.beginner {
+  background: linear-gradient(90deg, #4a90e2, #5ca9fb);
+}
+
+.progress-segment.intermediate {
+  background: linear-gradient(90deg, #5ca9fb, #7ed321);
+}
+
+.progress-segment.advanced {
+  background: linear-gradient(90deg, #7ed321, #f5a623);
+}
+
+.progress-segment.expert {
+  background: linear-gradient(90deg, #f5a623, #ff4444);
+}
+
+.progress-segment.ultimate {
+  background: linear-gradient(90deg, #ff4444, #ffcc00);
+}
+
+.flame-marker {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  top: 40%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  opacity: 1;
+}
+
+.flame-marker::before {
+  content: '🔥';
+  font-size: 20px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.progress-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 4px;
+  padding: 0 6px;
+}
+
+.progress-label {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.6);
+  text-align: center;
+  flex: 1;
+}
+
+.progress-label.active {
+  color: #ffcc00;
+  font-weight: bold;
 }
 
 .share-furnace {
@@ -818,16 +1046,17 @@ button:disabled {
 }
 
 .share-qrcode {
-  margin: 15px 0;
+  margin: 15px auto;
   padding: 12px;
   background: rgba(255, 255, 255, 0.1);
   border-radius: 12px;
   display: inline-block;
+  text-align: center;
 }
 
 .share-qrcode img {
-  width: 150px;
-  height: 150px;
+  width: 120px;
+  height: 120px;
   margin-bottom: 8px;
   border-radius: 8px;
   border: 2px solid rgba(255, 255, 255, 0.2);
@@ -1192,119 +1421,4 @@ button:disabled {
     transform: scale(1);
     opacity: 1;
   }
-}
-
-/* 进度条样式 */
-.progress-container {
-  width: 100%;
-  height: 12px;
-  background: rgba(0, 0, 0, 0.3);
-  border-radius: 6px;
-  margin: 8px 0 40px 0;
-  position: relative;
-  overflow: visible;
-  border: 1px solid rgba(255, 204, 0, 0.2);
-}
-
-.progress-bar {
-  height: 100%;
-  position: relative;
-  display: flex;
-  border-radius: 6px;
-  overflow: hidden;
-}
-
-.progress-segment {
-  height: 100%;
-  transition: width 0.3s ease;
-}
-
-.progress-segment:first-child {
-  border-top-left-radius: 6px;
-  border-bottom-left-radius: 6px;
-}
-
-.progress-segment:last-child {
-  border-top-right-radius: 6px;
-  border-bottom-right-radius: 6px;
-}
-
-.progress-segment.beginner {
-  background: linear-gradient(90deg, #4a90e2, #5ca9fb);
-}
-
-.progress-segment.intermediate {
-  background: linear-gradient(90deg, #5ca9fb, #7ed321);
-}
-
-.progress-segment.advanced {
-  background: linear-gradient(90deg, #7ed321, #f5a623);
-}
-
-.progress-segment.expert {
-  background: linear-gradient(90deg, #f5a623, #ff4444);
-}
-
-.progress-segment.ultimate {
-  background: linear-gradient(90deg, #ff4444, #ffcc00);
-}
-
-.flame-marker {
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  top: 40%;
-  transform: translate(-50%, -50%);
-  z-index: 2;
-  opacity: 0;
-  animation: flameAppear 0.5s ease-out forwards;
-}
-
-.flame-marker::before {
-  content: '🔥';
-  font-size: 20px;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  animation: flameFloat 1s ease-in-out infinite alternate;
-}
-
-@keyframes flameAppear {
-  0% {
-    opacity: 0;
-    transform: translate(-50%, -50%) scale(0.5);
-  }
-  100% {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
-  }
-}
-
-@keyframes flameFloat {
-  0% {
-    transform: translate(-50%, -50%) scale(1);
-  }
-  100% {
-    transform: translate(-50%, -50%) scale(1.1);
-  }
-}
-
-.progress-labels {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 4px;
-  padding: 0 6px;
-}
-
-.progress-label {
-  font-size: 10px;
-  color: rgba(255, 255, 255, 0.6);
-  text-align: center;
-  flex: 1;
-}
-
-.progress-label.active {
-  color: #ffcc00;
-  font-weight: bold;
 }

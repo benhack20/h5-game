@@ -477,28 +477,59 @@ function endGame() {
       shareContainer.className = 'share-container';
       shareContainer.innerHTML = `
         <div class="share-content">
-          <div class="share-furnace">
-            <img src="furnace.png" alt="炼丹炉" class="share-furnace-img" />
-            <div class="share-furnace-text">猛戳炼丹炉<br>开始训练大模型</div>
-          </div>
-          <div class="share-header">
-            <h2><span class="fire-emoji">🔥</span>启迪之星<br>大模型炼丹场</h2>
-            <div class="share-subtitle">我在<span class="time-number">${config.gameDuration}</span>秒内炼出了模型：</div>
-          </div>
-          <div class="share-model">${model.name}</div>
-          <div class="share-message">${model.description}</div>
-          <div class="share-score">
-            <div class="share-score-label">最终得分</div>
-            <div class="share-score-value">${finalScore}</div>
-          </div>
-          ${errorSummary ? `
-            <div class="share-error-summary">
-              <div class="share-error-title">大模型炼丹的路上，你经历了：</div>
-              <div class="share-error-list">${errorSummary}</div>
+          <div class="result-title">你炼出了模型：</div>
+          <div class="result-model">${model.name}</div>
+          <div class="result-message">
+            <div class="model-description">${model.description}</div>
+            <div class="result-score">
+              <div class="result-score-label">最终得分</div>
+              <div class="result-score-value">${finalScore}</div>
             </div>
-          ` : ''}
-          <div class="share-footer">
-            <div class="share-tagline">你能炼出什么模型？</div>
+            ${(() => {
+              // 找到下一个模型
+              let nextModel = null;
+              let strongerModelsCount = 0;
+              for (let i = 0; i < modelRanks.length; i++) {
+                if (modelRanks[i].min > finalScore) {
+                  if (!nextModel) {
+                    nextModel = modelRanks[i];
+                  }
+                  strongerModelsCount++;
+                }
+              }
+              
+              // 计算进度条各段宽度
+              const totalRange = modelRanks[modelRanks.length - 1].min;
+              const currentProgress = (finalScore / totalRange) * 100;
+              
+              // 生成进度条HTML
+              return `
+                <div class="progress-container">
+                  <div class="progress-bar">
+                    <div class="progress-segment beginner" style="width: ${Math.min(100, (MODEL_RANKS.INTERMEDIATE.min / totalRange) * 100)}%"></div>
+                    <div class="progress-segment intermediate" style="width: ${Math.min(100, ((MODEL_RANKS.ADVANCED.min - MODEL_RANKS.INTERMEDIATE.min) / totalRange) * 100)}%"></div>
+                    <div class="progress-segment advanced" style="width: ${Math.min(100, ((MODEL_RANKS.EXPERT.min - MODEL_RANKS.ADVANCED.min) / totalRange) * 100)}%"></div>
+                    <div class="progress-segment expert" style="width: ${Math.min(100, ((totalRange - MODEL_RANKS.EXPERT.min) / totalRange) * 100)}%"></div>
+          </div>
+                  <div class="flame-marker" style="left: ${currentProgress}%"></div>
+                  <div class="progress-labels">
+                    <div class="progress-label ${finalScore >= MODEL_RANKS.BEGINNER.min ? 'active' : ''}">菜鸟</div>
+                    <div class="progress-label ${finalScore >= MODEL_RANKS.INTERMEDIATE.min ? 'active' : ''}">学徒</div>
+                    <div class="progress-label ${finalScore >= MODEL_RANKS.ADVANCED.min ? 'active' : ''}">大师</div>
+                    <div class="progress-label ${finalScore >= MODEL_RANKS.EXPERT.min ? 'active' : ''}">宗师</div>
+          </div>
+          </div>
+              `;
+            })()}
+          ${errorSummary ? `
+              <div class="error-summary">
+                <div class="error-title">大模型炼丹的路上，你经历了：</div>
+                <div class="error-list">${errorSummary}</div>
+              </div>
+            ` : ''}
+            <div class="promotion-section">
+              <div class="promotion-message">${promotionMessages[Math.floor(Math.random() * promotionMessages.length)]}</div>
+            </div>
             <div class="share-qrcode">
               <img src="wechat-qrcode.png" alt="扫码体验" />
               <p>扫码来挑战</p>
