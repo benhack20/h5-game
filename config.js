@@ -10,5 +10,5 @@ export const config = {
   gameDuration: 30,
   
   // 正负面物品出现概率
-  positiveItemProbability: 0.64,
+  positiveItemProbability: 0.6,
 }; 

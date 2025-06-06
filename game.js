@@ -424,7 +424,7 @@ function endGame() {
         <div class="error-list">${errorSummary}</div>
       </div>
     ` : ''}
-    <div class="promotion-section" style="margin-top: 24px;">
+    <div class="promotion-section" style="margin-top: 24px; margin-bottom: 32px;">
       <div class="promotion-message" style="font-size: 14px; margin-bottom: 12px;">${promotionMessages[Math.floor(Math.random() * promotionMessages.length)]}</div>
       <div class="share-qrcode" style="margin: 0 auto; width: 120px;">
         <img src="wechat-qrcode.png" alt="了解更多" style="width: 100%; height: auto;" />
