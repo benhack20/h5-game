@@ -408,9 +408,9 @@ function endGame() {
       
       // 如果找到了下一个模型，计算差值
       if (nextModel) {
-        const scoreDiff = nextModel.min - finalScore;
+        const scoreDiff = modelRanks[modelRanks.length - 1].min - finalScore;
         return `<div class="result-score" style="margin-top: 8px;">
-          <div class="result-score-label" style="font-size: 16px;">距离下一个模型还差<span style="margin: 0 2px; vertical-align: -0.1em;">${scoreDiff}</span>分</div>
+          <div class="result-score-label" style="font-size: 16px;">距离终极模型还差<span style="margin: 0 2px; vertical-align: -0.1em;">${scoreDiff}</span>分</div>
           <div class="result-score-label" style="font-size: 16px; margin-top: 4px;">前方还有<span style="margin: 0 2px; vertical-align: -0.1em;">${strongerModelsCount}</span>个模型等待炼出</div>
         </div>`;
       } else {
