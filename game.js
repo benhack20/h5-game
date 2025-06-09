@@ -27,6 +27,17 @@ let lastActivityTime = 0;     // 记录最后活动时间
 let currentItem = null;  // 添加一个变量来存储当前显示的物品
 let isFirstGame = true;  // 添加变量标记是否是第一局游戏
 
+// 生成或获取玩家ID
+function getPlayerId() {
+  let playerId = localStorage.getItem('playerId');
+  if (!playerId) {
+    // 生成新的玩家ID：时间戳 + 随机字符串
+    playerId = `player_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    localStorage.setItem('playerId', playerId);
+  }
+  return playerId;
+}
+
 const scoreDisplay = document.getElementById('score');
 const furnace = document.getElementById('furnace');
 const furnaceContent = document.getElementById('furnace-content');
@@ -331,6 +342,29 @@ function endGame() {
   } else if (finalScore >= MODEL_RANKS.INTERMEDIATE.min) {
     modelRank = MODEL_RANKS.INTERMEDIATE.name;
   }
+
+  // 收集游戏数据
+  const gameData = {
+    playerId: getPlayerId(),
+    score: finalScore,
+    modelName: model.name,
+    modelRank: modelRank,
+    clickedErrors: clickedErrors.map(item => item.name),
+    clickedPositives: clickedPositives.map(item => item.name),
+    timestamp: Date.now(),
+    isFirstGame: isFirstGame
+  };
+
+  // 发送数据到服务器
+  fetch('/api/game-data', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(gameData)
+  }).catch(error => {
+    console.error('保存游戏数据失败:', error);
+  });
   
   // 显示结算界面
   const resultOverlay = document.querySelector('.result-overlay');
@@ -465,7 +499,7 @@ function endGame() {
   const resultButtons = document.querySelector('.result-buttons');
   resultButtons.innerHTML = `
     <button class="result-button">回炉重炼</button>
-    <button class="result-button learn-more-button" onclick="window.open('${WECHAT_URL}', '_blank')">前往了解</button>
+    <button class="result-button learn-more-button">前往了解</button>
     <button class="share-icon-button" title="分享战绩">
       <svg viewBox="0 0 24 24" width="24" height="24">
         <path fill="currentColor" d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/>
@@ -473,10 +507,76 @@ function endGame() {
     </button>
   `;
 
+  // 添加前往了解按钮事件
+  const learnMoreButton = document.querySelector('.learn-more-button');
+  learnMoreButton.onclick = () => {
+    // 记录按钮点击
+    fetch('/api/game-data', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        playerId: getPlayerId(),
+        buttonClicked: 'learn_more',
+        timestamp: Date.now()
+      })
+    }).catch(error => {
+      console.error('记录按钮点击失败:', error);
+    });
+
+    // 打开链接
+    window.open(WECHAT_URL, '_blank');
+    
+    // 关闭结算界面并重置游戏状态
+    resultOverlay.classList.remove('show');
+    resultModel.classList.remove('model-reveal');
+    resetGame();
+  };
+
+  // 添加重新开始按钮事件
+  const restartButton = document.querySelector('.result-button:not(.learn-more-button)');
+  restartButton.onclick = () => {
+    // 记录按钮点击
+    fetch('/api/game-data', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        playerId: getPlayerId(),
+        buttonClicked: 'restart',
+        timestamp: Date.now()
+      })
+    }).catch(error => {
+      console.error('记录按钮点击失败:', error);
+    });
+
+    // 直接关闭结算界面并重置游戏状态
+    resultOverlay.classList.remove('show');
+    resultModel.classList.remove('model-reveal');
+    resetGame();
+  };
+  
   // 添加分享按钮事件
   const shareIconButton = document.querySelector('.share-icon-button');
   shareIconButton.onclick = async () => {
     try {
+      // 记录按钮点击
+      fetch('/api/game-data', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          playerId: getPlayerId(),
+          buttonClicked: 'share',
+          timestamp: Date.now()
+        })
+      }).catch(error => {
+        console.error('记录按钮点击失败:', error);
+      });
+
       // 添加加载动画
       shareIconButton.classList.add('loading');
       const originalHTML = shareIconButton.innerHTML;
@@ -520,15 +620,15 @@ function endGame() {
                     <div class="progress-segment intermediate" style="width: ${Math.min(100, ((MODEL_RANKS.ADVANCED.min - MODEL_RANKS.INTERMEDIATE.min) / totalRange) * 100)}%"></div>
                     <div class="progress-segment advanced" style="width: ${Math.min(100, ((MODEL_RANKS.EXPERT.min - MODEL_RANKS.ADVANCED.min) / totalRange) * 100)}%"></div>
                     <div class="progress-segment expert" style="width: ${Math.min(100, ((totalRange - MODEL_RANKS.EXPERT.min) / totalRange) * 100)}%"></div>
-          </div>
+                  </div>
                   <div class="flame-marker" style="left: ${currentProgress}%"></div>
                   <div class="progress-labels">
                     <div class="progress-label ${finalScore >= MODEL_RANKS.BEGINNER.min ? 'active' : ''}">菜鸟</div>
                     <div class="progress-label ${finalScore >= MODEL_RANKS.INTERMEDIATE.min ? 'active' : ''}">学徒</div>
                     <div class="progress-label ${finalScore >= MODEL_RANKS.ADVANCED.min ? 'active' : ''}">大师</div>
                     <div class="progress-label ${finalScore >= MODEL_RANKS.EXPERT.min ? 'active' : ''}">宗师</div>
-          </div>
-          </div>
+                  </div>
+                </div>
               `;
             })()}
           ${errorSummary ? `
@@ -604,15 +704,6 @@ function endGame() {
       shareIconButton.classList.remove('loading');
       shareIconButton.innerHTML = originalHTML;
     }
-  };
-  
-  // 添加重新开始按钮事件
-  const restartButton = document.querySelector('.result-button:not(.learn-more-button)');
-  restartButton.onclick = () => {
-    // 直接关闭结算界面并重置游戏状态
-    resultOverlay.classList.remove('show');
-    resultModel.classList.remove('model-reveal');
-    resetGame();
   };
   
   timerDisplay.textContent = `0s`;

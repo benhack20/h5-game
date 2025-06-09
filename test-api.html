@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>游戏数据API测试</title>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #response {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <h1>游戏数据API测试</h1>
+    
+    <div class="form-group">
+        <label for="score">游戏分数：</label>
+        <input type="number" id="score" value="100">
+    </div>
+
+    <div class="form-group">
+        <label for="buttonClicked">点击的按钮：</label>
+        <select id="buttonClicked">
+            <option value="restart">重新开始</option>
+            <option value="share">分享</option>
+            <option value="home">返回主页</option>
+            <option value="settings">设置</option>
+        </select>
+    </div>
+
+    <button onclick="sendData()">发送数据</button>
+
+    <div id="response">响应结果将显示在这里...</div>
+
+    <script>
+        async function sendData() {
+            const score = document.getElementById('score').value;
+            const buttonClicked = document.getElementById('buttonClicked').value;
+            const responseDiv = document.getElementById('response');
+
+            try {
+                const response = await fetch('/api/game-data', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        score: parseInt(score),
+                        buttonClicked,
+                        timestamp: Date.now()
+                    })
+                });
+
+                const data = await response.json();
+                responseDiv.textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                responseDiv.textContent = '错误：' + error.message;
+            }
+        }
+    </script>
+</body>
+</html> 
