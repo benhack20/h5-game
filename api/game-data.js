@@ -4,6 +4,16 @@ const redis = createClient({
   url: process.env.REDIS_URL
 });
 
+// 统计键名
+const STATS = {
+  TOTAL_PLAYERS: 'stats:total_players',
+  TOTAL_GAMES: 'stats:total_games',
+  BUTTON_CLICKS: 'stats:button_clicks',
+  MODEL_COUNTS: 'stats:model_counts',
+  PLAYER_TIMELINE: 'stats:player_timeline',  // 用于记录新增玩家时间分布
+  PLAYER_SET: 'stats:players'  // 用于存储所有玩家ID
+};
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Method not allowed' });
@@ -17,20 +27,39 @@ export default async function handler(req, res) {
     const { 
       playerId,
       score, 
-      buttonClicked
+      buttonClicked,
+      modelName
     } = req.body;
+
+    // 检查是否是新玩家
+    const isNewPlayer = !(await redis.sIsMember(STATS.PLAYER_SET, playerId));
+    if (isNewPlayer) {
+      // 记录新玩家
+      await redis.sAdd(STATS.PLAYER_SET, playerId);
+      await redis.incr(STATS.TOTAL_PLAYERS);
+      // 记录到时间线
+      const timestamp = Date.now();
+      await redis.zAdd(STATS.PLAYER_TIMELINE, {
+        score: timestamp,
+        value: playerId
+      });
+    }
 
     // 如果是按钮点击事件
     if (buttonClicked) {
-      // 记录按钮点击
-      await redis.lPush(`p:${playerId}`, buttonClicked);
+      // 增加按钮点击计数
+      await redis.hIncrBy(STATS.BUTTON_CLICKS, buttonClicked, 1);
       return res.status(200).json({ success: true });
     }
     
     // 游戏结束事件
-    // 记录游戏数据，使用 t:timestamp,s:score 格式
-    const timestamp = Date.now();
-    await redis.lPush(`p:${playerId}`, `t:${timestamp},s:${score}`);
+    // 增加总游戏局数
+    await redis.incr(STATS.TOTAL_GAMES);
+    
+    // 如果指定了模型名称，增加该模型的计数
+    if (modelName) {
+      await redis.hIncrBy(STATS.MODEL_COUNTS, modelName, 1);
+    }
 
     res.status(200).json({ 
       success: true, 
