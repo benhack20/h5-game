@@ -1,4 +1,4 @@
-import { modelRanks } from '../models.js';
+import { modelRanks } from '../public/models.js';
 
 export default async function handler(req, res) {
   if (req.method !== 'GET') {
