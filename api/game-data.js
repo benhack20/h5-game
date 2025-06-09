@@ -6,7 +6,6 @@ const redis = createClient({
 
 // 统计键名
 const STATS = {
-  TOTAL_PLAYERS: 'stats:total_players',
   TOTAL_GAMES: 'stats:total_games',
   BUTTON_CLICKS: 'stats:button_clicks',
   MODEL_COUNTS: 'stats:model_counts',
@@ -36,7 +35,6 @@ export default async function handler(req, res) {
     if (isNewPlayer) {
       // 记录新玩家
       await redis.sAdd(STATS.PLAYER_SET, playerId);
-      await redis.incr(STATS.TOTAL_PLAYERS);
       // 记录到时间线
       const timestamp = Date.now();
       await redis.zAdd(STATS.PLAYER_TIMELINE, {
