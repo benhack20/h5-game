@@ -1,3 +1,3 @@
 // 微信公众号文章链接
 // export const WECHAT_URL = 'https://mp.weixin.qq.com/s/8vLQsRmd9lQTKf5dkpJ7ow';
-export const WECHAT_URL = 'https://mp.weixin.qq.com/s?__biz=MzI3NTAyMjc0Ng==&tempkey=MTMyNl9GUjFFQVlDcTZBQU8yUms3blFkajdHZS04VnZ0SllEQWZsWVNvZ0pXQ2tpd2xwNnZfX3BlUmIySzVRUWtNQzFzSERveU0yWWxySkc2cDZfT2d3RDB5Vm9SRm5SU1ZPVWFjSFFlbS1tUDF3RWJYNnFNb2pWbW02SElFRkVCQy1PVjFPZHRlS2ZjTGlOUmd1NlhzUnoxV1BxV091UWJacXpBcFFnZEJBfn4%3D&chksm=730936a9447ebfbf29b75416f5e07acf7b6f475a5662713f1172ced84c1cc2d14f53a7498ebb&xtrack=1&sessionid=1749702048&flutter_pos=0&clicktime=1749709814&enterid=1749709814&finder_biz_enter_id=4&ranksessionid=1749693333&ascene=1&realreporttime=1749709814827&from=singlemessage&scene=1&subscene=10000&forceh5=1';
+export const WECHAT_URL = 'https://mp.weixin.qq.com/s/9YUboaz5r31_1ySM93TiZw';
